@@ -15,9 +15,24 @@ def read(file_name):
 
 
 def lists_to_dicts(lists: list, keys: list) -> list:
+    """
+    Converts a list of lists into a list of dictionaries by assigning each value to the
+    corresponding key.
+
+    Args:
+        lists: The list of lists containing the dictionary values.
+        keys: The list containing the dictionary keys.
+
+    Returns:
+        A list of dictionaries.
+
+    Raises:
+        RuntimeError: Raises an exception if the number of keys is not equal to the number
+        of elements within the list.
+    """
     new_list = []
     for list_ in lists:
-        list_to_dict(list_, keys)
+        new_list.append(list_to_dict(list_, keys))
     return new_list
 
 
@@ -30,7 +45,7 @@ def list_to_dict(list_: list, keys: list) -> dict:
         keys: The list containing the dictionary keys.
 
     Returns:
-        A dictionary with each element in the list assigned to the corresponding key.
+        A dictionary.
 
     Raises:
         RuntimeError: Raises an exception if the number of keys is not equal to the number
