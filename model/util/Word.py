@@ -1,5 +1,5 @@
 from model.util.FileReader import read
-from model.TextProcessor import clean
+from model.util.TextProcessor import clean
 from nltk import FreqDist
 
 

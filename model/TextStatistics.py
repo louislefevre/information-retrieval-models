@@ -10,7 +10,7 @@
 from matplotlib import pyplot as plt
 from sklearn.preprocessing import normalize
 from nltk import FreqDist
-from model.TextProcessor import tokenize, normalise, stem
+from model.util.TextProcessor import tokenize, normalise, stem
 from model.util.FileReader import read
 
 
