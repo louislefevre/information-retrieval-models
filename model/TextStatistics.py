@@ -11,11 +11,13 @@ from matplotlib import pyplot as plt
 from sklearn.preprocessing import normalize
 from nltk import FreqDist
 from model.TextProcessor import tokenize, normalise, stem
+from model.util.FileReader import read
 
 
 def plot():
     passage_collection = "dataset/passage_collection_new.txt"
-    tokens = tokenize(passage_collection)
+    text = read(passage_collection)
+    tokens = tokenize(text)
     tokens = normalise(tokens)
     tokens = stem(tokens)
     _plot_frequencies(tokens)
