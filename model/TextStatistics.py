@@ -13,10 +13,11 @@ from nltk import FreqDist
 
 
 def plot_frequencies(tokens):
-    freq = FreqDist(tokens)
-    common = freq.most_common(100)
+    dist = FreqDist(tokens)
+    common = dist.most_common(100)
     frequencies = [tup[1] for tup in common]
     frequencies = normalize([frequencies])[0]
+    frequencies = [e*0.1 for e in frequencies]
     plot(frequencies, title="Term Frequency", x_label="Rank", y_label="Probability", show=True)
 
 
