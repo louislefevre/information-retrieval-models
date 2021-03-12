@@ -1,6 +1,4 @@
-from model.data.Passage import Passage
-from model.data.Word import Word
-from model.data.Query import Query
+from model.data.Text import Passage, Query, Word
 
 
 # Text pre-processing
