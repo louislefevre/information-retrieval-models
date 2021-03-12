@@ -10,18 +10,27 @@
 from matplotlib import pyplot as plt
 from sklearn.preprocessing import normalize
 from nltk import FreqDist
+from model.TextProcessor import tokenize, normalise, stem
 
 
-def plot_frequencies(tokens):
+def plot():
+    passage_collection = "dataset/passage_collection_new.txt"
+    tokens = tokenize(passage_collection)
+    tokens = normalise(tokens)
+    tokens = stem(tokens)
+    _plot_frequencies(tokens)
+
+
+def _plot_frequencies(tokens):
     dist = FreqDist(tokens)
     common = dist.most_common(100)
     frequencies = [tup[1] for tup in common]
     frequencies = normalize([frequencies])[0]
     frequencies = [e*0.1 for e in frequencies]
-    plot(frequencies, title="Term Frequency", x_label="Rank", y_label="Probability", show=True)
+    _plot_figure(frequencies, title="Term Frequency", x_label="Rank", y_label="Probability")
 
 
-def plot(data, title=None, x_label=None, y_label=None, save=False, show=False):
+def _plot_figure(data, title=None, x_label=None, y_label=None, save=False, show=False):
     plt.plot(data)
     plt.title(title)
     plt.xlabel(x_label)
