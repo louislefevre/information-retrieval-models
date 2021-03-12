@@ -1,6 +1,5 @@
-from model.util.DataManager import read, lists_to_dicts
 from model.TextProcessor import tokenize, normalise, remove_stopwords, stem
-
+from model.TextStatistics import plot_frequencies
 # queries = "dataset/test-queries.tsv"
 # candidate_passages = "dataset/candidate_passages_top1000.tsv"
 
@@ -14,8 +13,14 @@ from model.TextProcessor import tokenize, normalise, remove_stopwords, stem
 # statistics = TextProcessor(passage_collection)
 # frequencies = statistics.frequency()
 
+# Text pre-processing
 passage_collection = "dataset/passage_collection_new.txt"
 tokens = tokenize(passage_collection)
 tokens = normalise(tokens)
-tokens = remove_stopwords(tokens)
 tokens = stem(tokens)
+
+# Text statistics
+plot_frequencies(tokens)
+
+# Remove stopwords
+tokens = remove_stopwords(tokens)
