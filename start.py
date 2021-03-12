@@ -1,6 +1,6 @@
-from model.util.Passage import Passage
-from model.util.Word import Word
-from model.util.Query import Query
+from model.data.Passage import Passage
+from model.data.Word import Word
+from model.data.Query import Query
 
 
 # Text pre-processing

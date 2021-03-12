@@ -1,20 +1,15 @@
-from model.util.FileReader import read
-from model.util.TextProcessor import clean
+from dataclasses import dataclass
+
 from nltk import FreqDist
 
+from model.util.FileReader import read
+from model.util.TextProcessor import clean
 
+
+@dataclass
 class Word:
-    def __init__(self, word: str, freq: float):
-        self._word = word
-        self._freq = freq
-
-    @property
-    def word(self) -> str:
-        return self._word
-
-    @property
-    def freq(self) -> float:
-        return self._freq
+    word: str
+    freq: float
 
     @staticmethod
     def convert(file_name: str) -> list:
