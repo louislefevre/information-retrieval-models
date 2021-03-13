@@ -8,14 +8,15 @@ class InvertedIndex:
 
     def index_passage(self, passage):
         terms = clean(passage.passage)
-
         seen_terms = dict()
-        for term in terms:
+        for pos, term in enumerate(terms):
             if term in seen_terms:
                 term_frequency = seen_terms[term].freq
+                positions = seen_terms[term].positions
             else:
                 term_frequency = 0
-            seen_terms[term] = Posting(passage.pid, term_frequency + 1)
+                positions = []
+            seen_terms[term] = Posting(passage.pid, term_frequency+1, positions+[pos])
 
         for term, posting in seen_terms.items():
             if term not in self._index:

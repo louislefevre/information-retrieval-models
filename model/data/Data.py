@@ -17,3 +17,4 @@ class Query:
 class Posting:
     pointer: int
     freq: int
+    positions: list[int]
