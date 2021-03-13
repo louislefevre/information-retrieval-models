@@ -12,6 +12,8 @@ def main():
     for passage in passage_collection:
         index.index_passage(passage)
 
+    print(index.display())
+
 
 if __name__ == '__main__':
     main()

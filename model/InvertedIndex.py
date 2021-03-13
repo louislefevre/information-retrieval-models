@@ -23,3 +23,10 @@ class InvertedIndex:
                 self._index[term] = [posting]
             else:
                 self._index[term] += [posting]
+
+    def display(self):
+        for term, postings in self._index.items():
+            posts = ""
+            for post in postings:
+                posts += str([post.pointer, post.freq, post.positions]) + " "
+            print(f"{term} : {posts}")
