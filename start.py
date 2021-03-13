@@ -1,12 +1,17 @@
-from model.data.Text import Passage, Query, Word
+from model.util.FileReader import process_test_queries, process_candidate_passages_and_queries, \
+    process_passage_collection
+from model.InvertedIndex import InvertedIndex
 
 
-# Text pre-processing
-candidate_passages = "dataset/candidate_passages_top1000.tsv"
-passages = Passage.convert(candidate_passages)
+def main():
+    test_queries = process_test_queries()
+    candidate_passages, candidate_queries = process_candidate_passages_and_queries()
+    passage_collection = process_passage_collection()[:2]
 
-test_queries = "dataset/test-queries.tsv"
-queries = Query.convert(test_queries)
+    index = InvertedIndex()
+    for passage in passage_collection:
+        index.index_passage(passage)
 
-passage_collection = "dataset/passage_collection_new.txt"
-words = Word.convert(passage_collection)
+
+if __name__ == '__main__':
+    main()
