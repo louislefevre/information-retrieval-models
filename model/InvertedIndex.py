@@ -1,25 +1,26 @@
-from model.data.Data import Posting, Passage
+from dataclasses import dataclass
 from model.util.TextProcessor import clean
-from collections import Counter
-from math import log
+from math import log10
 
 
 class InvertedIndex:
-    def __init__(self, collection):
-        self._collection = collection
-        self._index = dict()
+    def __init__(self, collection: dict[int, str]):
+        self._collection = self._clean_collection(collection)
+        self._index: dict[str, list['Posting']] = dict()
+
+    @staticmethod
+    def _clean_collection(collection: dict[int, str]) -> dict[int, list[str]]:
+        return {pid: clean(passage) for pid, passage in collection.items()}
 
     def index(self):
-        for passage in self._collection:
-            self._index_passage(passage)
+        for pid, terms in self._collection.items():
+            self._index_passage(pid, terms)
 
         for term, postings in self._index.items():
             for posting in postings:
-                posting.tfidf = self._tf_idf(term)
+                posting.tfidf = self._tf_idf(term, posting)
 
-    def _index_passage(self, passage):
-        terms = clean(passage.text)
-
+    def _index_passage(self, pid: int, terms: list[str]):
         seen_terms = dict()
         for pos, term in enumerate(terms):
             if term in seen_terms:
@@ -28,7 +29,7 @@ class InvertedIndex:
             else:
                 term_frequency = 0
                 positions = []
-            seen_terms[term] = Posting(passage.pid, term_frequency+1, positions+[pos])
+            seen_terms[term] = Posting(pid, term_frequency+1, positions+[pos])
 
         for term, posting in seen_terms.items():
             if term not in self._index:
@@ -36,27 +37,29 @@ class InvertedIndex:
             else:
                 self._index[term] += [posting]
 
-    def _tf_idf(self, term: str, passage: Passage):
-        # tf(t,d) = count of t in d / number of words in d
-        for posting in self._index[term]:
-            if posting.pointer == passage.pid:
-                tf = posting.freq / len(passage.text.split())
-                break
-        else:
-            raise KeyError(f"Term '{term}' is not in passage '{passage}.")
+    def _tf_idf(self, term: str, posting: 'Posting') -> float:
+        # Frequency of term in passage divided by number of words in the passage
+        tf = posting.freq / len(self._collection[posting.pointer])
 
-        # df(t) = occurrence of t in documents.
+        # Number of occurrences of the term in all passages.
         df = len(self._index[term])
 
-        # idf(t) = log(N/(df + 1))
-        idf = log(len(self._collection) / df + 1)
+        # Log total passage count divided by df.
+        idf = log10(len(self._collection) / df)
 
-        # tf-idf(t, d) = tf(t, d) * log(N/(df + 1))
         return tf * idf
 
     def display(self):
         for term, postings in self._index.items():
             posts = ""
             for post in postings:
-                posts += str([post.pointer, post.freq, post.positions]) + " "
+                posts += str([post.pointer, post.freq, post.tfidf, post.positions]) + " "
             print(f"{term} : {posts}")
+
+
+@dataclass
+class Posting:
+    pointer: int
+    freq: int
+    positions: list[int]
+    tfidf: float = 0.0
