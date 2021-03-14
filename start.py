@@ -8,11 +8,9 @@ def main():
     candidate_passages, candidate_queries = process_candidate_passages_and_queries()
     passage_collection = process_passage_collection()
 
-    index = InvertedIndex()
-    for passage in passage_collection:
-        index.index_passage(passage)
-
-    print(index.display())
+    inverted_index = InvertedIndex(passage_collection)
+    inverted_index.index()
+    inverted_index.display()
 
 
 if __name__ == '__main__':
