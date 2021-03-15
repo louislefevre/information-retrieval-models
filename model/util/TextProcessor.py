@@ -12,11 +12,12 @@ def clean_collection(collection: dict[int, str]) -> dict[int, list[str]]:
     return {pid: clean(passage) for pid, passage in collection.items()}
 
 
-def clean(text: str) -> list[str]:
+def clean(text: str, remove_sw=True) -> list[str]:
     tokens = _tokenize(text)
     tokens = _convert_numbers(tokens)
     tokens = _normalise(tokens)
-    tokens = _remove_stopwords(tokens)
+    if remove_sw:
+        tokens = _remove_stopwords(tokens)
     tokens = _stem(tokens)
     return tokens
 
@@ -26,7 +27,8 @@ def _tokenize(text: str) -> list[str]:
 
 
 def _convert_numbers(tokens: list[str]) -> list[str]:
-    return [num2words(word) if word.isnumeric() else word for word in tokens]
+    # isascii() is required for handling unicode fractions (e.g. '½').
+    return [num2words(word) if word.isnumeric() and word.isascii() else word for word in tokens]
 
 
 def _normalise(tokens: list[str]) -> list[str]:
