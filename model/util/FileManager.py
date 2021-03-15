@@ -1,5 +1,6 @@
 import csv
 from typing import Union, Tuple
+import pickle
 
 
 def read(file_name: str) -> Union[list, str]:
@@ -7,9 +8,17 @@ def read(file_name: str) -> Union[list, str]:
     if file_name.endswith('.tsv'):
         return list(csv.reader(file, delimiter="\t"))
     elif file_name.endswith('.txt'):
-        return file.read()[:10000]
+        return file.read()
     else:
         raise RuntimeError("Invalid file type: only '.tsv' and '.txt' files are accepted.")
+
+
+def write_pickle(data: object, file_name: str):
+    pickle.dump(data, open(file_name, "wb"))
+
+
+def read_pickle(file_name: str) -> object:
+    return pickle.load(open(file_name, "rb"))
 
 
 def process_candidate_passages_and_queries() -> Tuple[dict[int, str], dict[int, str]]:
@@ -34,4 +43,3 @@ def process_passage_collection() -> dict[int, str]:
     passage_collection = "dataset/passage_collection_new.txt"
     rows = read(passage_collection).splitlines()
     return {pid: passage for pid, passage in enumerate(rows)}
-

@@ -8,13 +8,14 @@ class InvertedIndex:
         self._collection = clean_collection(collection)
         self._index: dict[str, list['Posting']] = dict()
 
-    def index(self):
+    def index_collection(self):
         for pid, terms in self._collection.items():
             self._index_passage(pid, terms)
 
         for term, postings in self._index.items():
             for posting in postings:
                 posting.tfidf = self._tf_idf(term, posting)
+        return self._index
 
     def _index_passage(self, pid: int, terms: list[str]):
         seen_terms = dict()
@@ -51,6 +52,14 @@ class InvertedIndex:
             for post in postings:
                 posts += str([post.pointer, post.freq, post.tfidf, post.positions]) + " "
             print(f"{term} : {posts}")
+
+    @property
+    def collection(self):
+        return self._collection
+
+    @property
+    def index(self):
+        return self._index
 
 
 @dataclass
