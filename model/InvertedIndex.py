@@ -1,16 +1,12 @@
 from dataclasses import dataclass
-from model.util.TextProcessor import clean
+from model.util.TextProcessor import clean_collection
 from math import log10
 
 
 class InvertedIndex:
     def __init__(self, collection: dict[int, str]):
-        self._collection = self._clean_collection(collection)
+        self._collection = clean_collection(collection)
         self._index: dict[str, list['Posting']] = dict()
-
-    @staticmethod
-    def _clean_collection(collection: dict[int, str]) -> dict[int, list[str]]:
-        return {pid: clean(passage) for pid, passage in collection.items()}
 
     def index(self):
         for pid, terms in self._collection.items():

@@ -8,32 +8,36 @@ from nltk.stem import PorterStemmer
 from num2words import num2words
 
 
+def clean_collection(collection: dict[int, str]) -> dict[int, list[str]]:
+    return {pid: clean(passage) for pid, passage in collection.items()}
+
+
 def clean(text: str) -> list[str]:
-    tokens = tokenize(text)
-    tokens = convert_numbers(tokens)
-    tokens = normalise(tokens)
-    tokens = remove_stopwords(tokens)
-    tokens = stem(tokens)
+    tokens = _tokenize(text)
+    tokens = _convert_numbers(tokens)
+    tokens = _normalise(tokens)
+    tokens = _remove_stopwords(tokens)
+    tokens = _stem(tokens)
     return tokens
 
 
-def tokenize(text: str) -> list[str]:
+def _tokenize(text: str) -> list[str]:
     return word_tokenize(text)
 
 
-def convert_numbers(tokens: list[str]) -> list[str]:
+def _convert_numbers(tokens: list[str]) -> list[str]:
     return [num2words(word) if word.isnumeric() else word for word in tokens]
 
 
-def normalise(tokens: list[str]) -> list[str]:
+def _normalise(tokens: list[str]) -> list[str]:
     return [word.lower() for word in tokens if word.isalpha()]
 
 
-def remove_stopwords(tokens: list[str]) -> list[str]:
+def _remove_stopwords(tokens: list[str]) -> list[str]:
     stop_words = stopwords.words("english")
     return [word for word in tokens if word not in stop_words]
 
 
-def stem(tokens: list[str]) -> list[str]:
+def _stem(tokens: list[str]) -> list[str]:
     stemmer = PorterStemmer()
     return [stemmer.stem(word) for word in tokens]
