@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from model.util.TextProcessor import clean_collection
+from retrieval.util.TextProcessor import clean_collection
 from math import log10
 
 

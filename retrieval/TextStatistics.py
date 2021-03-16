@@ -2,8 +2,8 @@ from matplotlib import pyplot as plt
 from nltk import FreqDist
 from sklearn.preprocessing import normalize
 
-from model.util.FileManager import process_passage_collection
-from model.util.TextProcessor import clean
+from retrieval.util.FileManager import process_passage_collection
+from retrieval.util.TextProcessor import clean
 
 
 def plot():

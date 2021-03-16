@@ -1,7 +1,7 @@
 from math import log
 
-from model.InvertedIndex import InvertedIndex
-from model.util.TextProcessor import clean
+from retrieval.InvertedIndex import InvertedIndex
+from retrieval.util.TextProcessor import clean
 
 
 class BM25:

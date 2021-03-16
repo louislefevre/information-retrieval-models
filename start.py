@@ -1,8 +1,8 @@
 import os
 
-from model.BM25 import BM25
-from model.InvertedIndex import InvertedIndex
-from model.util.FileManager import process_candidate_passages_and_queries, write_pickle, \
+from retrieval.models.BM25 import BM25
+from retrieval.InvertedIndex import InvertedIndex
+from retrieval.util.FileManager import process_candidate_passages_and_queries, write_pickle, \
     read_pickle
 
 
