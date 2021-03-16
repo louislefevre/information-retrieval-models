@@ -36,7 +36,7 @@ def process_candidate_passages_and_queries() -> Tuple[dict[int, str], dict[int, 
 def process_test_queries() -> dict[int, str]:
     test_queries = "dataset/test-queries.tsv"
     rows = read(test_queries)
-    return {qid: query for qid, query in enumerate(rows)}
+    return {row[0]: row[1] for row in rows}
 
 
 def process_passage_collection() -> dict[int, str]:
