@@ -30,7 +30,7 @@ def main():
 
     bm25 = BM25(index)
     for query in queries.values():
-        results = bm25.rank(query)
+        results = bm25.rank(query, top_n=10)
         display_results(query, results, passages)
 
 
