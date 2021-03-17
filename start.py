@@ -2,36 +2,49 @@ import os
 
 from retrieval.models.BM25 import BM25
 from retrieval.InvertedIndex import InvertedIndex
-from retrieval.util.FileManager import process_candidate_passages_and_queries, write_pickle, \
-    read_pickle
+from retrieval.models.VectorSpace import VectorSpace
+from retrieval.util.FileManager import write_pickle, read_pickle, process_queries, \
+    process_candidate_passages_and_queries
 
 
 def display_results(query: str, results: dict[int, float], passages: dict[int, str]):
     print(query)
     for pid, score in results.items():
         print(f"{pid}({round(score, 2)}): {passages[pid]}")
+    print()
 
 
-def generate_index(passages):
-    inverted_index = InvertedIndex(passages)
-    inverted_index.index_collection()
+def generate_index(file: str, passages: dict[int, str]):
+    if os.path.isfile(file) and not os.stat(file).st_size == 0:
+        inverted_index = read_pickle(file)
+    else:
+        inverted_index = InvertedIndex(passages)
+        inverted_index.index_collection()
+        write_pickle(inverted_index, file)
+
     return inverted_index
 
 
-def main():
+def run_all():
     passages, queries = process_candidate_passages_and_queries()
-    index_file = 'index.p'
-
-    if os.path.isfile(index_file) and not os.stat(index_file).st_size == 0:
-        index = read_pickle(index_file)
-    else:
-        index = generate_index(passages)
-        write_pickle(index, index_file)
-
-    bm25 = BM25(index)
-    for query in queries.values():
-        results = bm25.rank(query, top_n=10)
+    index = generate_index('indexes/index.p', passages)
+    model = BM25(index)
+    for qid, query in queries.items():
+        results = model.rank(query, top_n=100)
         display_results(query, results, passages)
+
+
+def run_isolated():
+    queries = process_queries()
+    for query in queries:
+        index = generate_index(f'indexes/{query.qid}.p', query.passages)
+        model = BM25(index)
+        results = model.rank(query.text, top_n=100)
+        display_results(query.text, results, query.passages)
+
+
+def main():
+    run_all()
 
 
 if __name__ == '__main__':
