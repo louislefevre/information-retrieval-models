@@ -21,6 +21,8 @@ class BM25:
         passage_scores = {}
         query_keywords = [word for word in clean(query)]
         for word in query_keywords:
+            if word not in self._index:
+                continue
             postings = self._index[word]
             for posting in postings:
                 pid = posting.pointer
