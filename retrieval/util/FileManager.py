@@ -1,4 +1,5 @@
 import csv
+from dataclasses import dataclass
 from typing import Union, Tuple
 import pickle
 
@@ -33,6 +34,19 @@ def process_candidate_passages_and_queries() -> Tuple[dict[int, str], dict[int, 
     return passages, queries
 
 
+def process_relations() -> dict[int, list[int]]:
+    candidate_passages = "dataset/candidate_passages_top1000.tsv"
+    rows = read(candidate_passages)
+    relations = {}
+    for row in rows:
+        qid, pid = int(row[0]), int(row[1])
+        if qid in relations:
+            relations[qid] += [pid]
+        else:
+            relations[qid] = [pid]
+    return relations
+
+
 def process_test_queries() -> dict[int, str]:
     test_queries = "dataset/test-queries.tsv"
     rows = read(test_queries)
@@ -43,3 +57,30 @@ def process_passage_collection() -> dict[int, str]:
     passage_collection = "dataset/passage_collection_new.txt"
     rows = read(passage_collection).splitlines()
     return {pid: passage for pid, passage in enumerate(rows)}
+
+
+def process_queries() -> list['Query']:
+    candidate_passages = "dataset/candidate_passages_top1000.tsv"
+    rows = read(candidate_passages)
+
+    queries = {}
+    for row in rows:
+        queries[int(row[0])] = row[2]
+
+    query_objs = []
+    for qid, query in queries.items():
+        query_objs.append(Query(qid, query, {}))
+
+    for query in query_objs:
+        for row in rows:
+            if int(row[0]) == query.qid:
+                query.passages[int(row[1])] = row[3]
+
+    return query_objs
+
+
+@dataclass
+class Query:
+    qid: int
+    text: str
+    passages: dict[int, str]
