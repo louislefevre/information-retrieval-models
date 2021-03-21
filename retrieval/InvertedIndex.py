@@ -54,12 +54,21 @@ class InvertedIndex:
             print(f"{term} : {posts}")
 
     @property
-    def collection(self):
+    def collection(self) -> dict[int, list[str]]:
         return self._collection
 
     @property
-    def index(self):
+    def index(self) -> dict[str, list['Posting']]:
         return self._index
+
+    @property
+    def collection_length(self) -> int:
+        return len(self._collection)
+
+    @property
+    def avg_length(self) -> float:
+        word_sum = sum(len(passage) for passage in self._collection.values())
+        return word_sum / self.collection_length
 
 
 @dataclass
