@@ -11,17 +11,26 @@ class BM25(Model):
         self._avg_length = index.avg_length
 
     def _score_passage(self, pid: int, word: str) -> float:
+        # Constants
+        r = 0
+        R = 0.0
         k1 = 1.2
+        k2 = 100.0
         b = 0.75
+        qf = 1
 
+        # Parameters
         inv_index = self._index[word]
-        postings = inv_index.postings
-        passage_count = inv_index.doc_freq
-        idf = log(((self._collection_length - passage_count + 0.5) / (passage_count + 0.5)) + 1)
+        n = inv_index.doc_freq
+        N = self._collection_length
+        dl = float(len(self._collection[pid]))
+        avg_dl = float(self._avg_length)
+        f = inv_index.get_posting(pid).freq
+        K = k1 * ((1 - b) + b * (dl / avg_dl))
 
-        relevant_doc = next((posting for posting in postings if posting.pointer == pid), None)
-        freq = relevant_doc.freq
-        passage_length = len(self._collection[pid])
-        word_score = idf * ((freq * (k1 + 1)) /
-                            (freq + k1 * ((1 - b) + b * (passage_length / self._avg_length))))
-        return word_score
+        # Formulas
+        expr_1 = log(((r + 0.5) / (R - r + 0.5)) /
+                     ((n - r + 0.5) / (N - n - R + r + 0.5)))
+        expr_2 = ((k1 + 1) * f) / (K + f)
+        expr_3 = ((k2 + 1) * qf) / (k2 + qf)
+        return expr_1 * expr_2 * expr_3
