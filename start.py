@@ -19,7 +19,7 @@ def generate_index(file: str, passages: dict[int, str]):
         inverted_index = read_pickle(file)
     else:
         inverted_index = InvertedIndex(passages)
-        inverted_index.index_collection()
+        inverted_index.parse()
         write_pickle(inverted_index, file)
 
     return inverted_index
