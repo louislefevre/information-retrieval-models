@@ -1,10 +1,10 @@
 import os
 
-from retrieval.models.BM25 import BM25
 from retrieval.InvertedIndex import InvertedIndex
+from retrieval.models.BM25 import BM25
 from retrieval.models.VectorSpace import VectorSpace
-from retrieval.util.FileManager import write_pickle, read_pickle, process_queries, \
-    process_candidate_passages_and_queries
+from retrieval.util.Dataset import Dataset
+from retrieval.util.FileManager import write_pickle, read_pickle
 
 
 def display_results(query: str, results: dict[int, float], passages: dict[int, str]):
@@ -25,26 +25,17 @@ def generate_index(file: str, passages: dict[int, str]):
     return inverted_index
 
 
-def run_all():
-    passages, queries = process_candidate_passages_and_queries()
-    index = generate_index('indexes/index.p', passages)
+def main():
+    dataset = Dataset('dataset/candidate_passages_top1000.tsv')
+    passages = dataset.passages()
+    queries = dataset.queries()
+
+    index = generate_index('index.p', passages)
     model = BM25(index)
+
     for qid, query in queries.items():
         results = model.rank(query, top_n=100)
         display_results(query, results, passages)
-
-
-def run_isolated():
-    queries = process_queries()
-    for query in queries:
-        index = generate_index(f'indexes/{query.qid}.p', query.passages)
-        model = BM25(index)
-        results = model.rank(query.text, top_n=100)
-        display_results(query.text, results, query.passages)
-
-
-def main():
-    run_all()
 
 
 if __name__ == '__main__':

@@ -7,7 +7,7 @@
 
 # Data
 dataset/
-indexes
+index.p
 
 # User-specific stuff
 .idea/
