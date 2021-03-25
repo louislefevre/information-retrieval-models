@@ -1,4 +1,4 @@
-from retrieval.InvertedIndex import InvertedIndex
+from retrieval.data.InvertedIndex import InvertedIndex
 from retrieval.util.TextProcessor import clean
 
 

@@ -1,9 +1,8 @@
 import os
 
-from retrieval.InvertedIndex import InvertedIndex
-from retrieval.models.BM25 import BM25
+from retrieval.data.InvertedIndex import InvertedIndex
 from retrieval.models.VectorSpace import VectorSpace
-from retrieval.util.Dataset import Dataset
+from retrieval.data.Dataset import Dataset
 from retrieval.util.FileManager import write_pickle, read_pickle
 
 

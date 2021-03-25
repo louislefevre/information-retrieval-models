@@ -5,7 +5,7 @@ import numpy as np
 from numpy import dot
 from numpy.linalg import norm
 
-from retrieval.InvertedIndex import InvertedIndex
+from retrieval.data.InvertedIndex import InvertedIndex
 from retrieval.models.Model import Model
 
 
