@@ -1,44 +1,70 @@
-from retrieval.InvertedIndex import InvertedIndex, Posting
+import math
+from math import log10
+
+from numpy import dot
+from numpy.linalg import norm
+
+from retrieval.InvertedIndex import InvertedIndex
+from retrieval.models.Model import Model
 from retrieval.util.TextProcessor import clean
 
 
-class VectorSpace:
+class VectorSpace(Model):
     def __init__(self, index: 'InvertedIndex'):
-        self._collection = index.collection
-        self._index = index.index
+        super().__init__(index)
+        self._collection_length = index.collection_length
+        self._vocab = index.vocab
+        self._vocab_count = index.vocab_count
 
-    def rank(self, query: str, top_n=100) -> dict[int, float]:
-        raise NotImplementedError
-
-    def vectorise_query(self, query: str):
-        query_vectors = {}
-        query_keywords = [word for word in clean(query)]
-        #for word in query_keywords:
-
-        passage_vectors = self.vectorise_passages(query)
+    def _parse_query(self, query: str) -> dict[int, float]:
+        passage_vectors, query_vectors = self._vectorise(query)
+        passage_scores = {}
 
         for pid, vectors in passage_vectors.items():
-            query_vectors = []
-            for word in query_keywords:
-                postings = self._index[word]
-                # for posting in postings:
+            passage_scores[pid] = self._cos_sim(query_vectors, vectors)
 
-    def vectorise_passages(self, query: str) -> dict[int, list[float]]:
-        passage_vectors = {}
+        return passage_scores
+
+    def _vectorise(self, query: str) -> tuple[dict[int, list[float]], list[float]]:
         query_keywords = [word for word in clean(query)]
+        passage_vectors = {}
+        query_vectors = [0.0] * self._vocab_count
+
         for word in query_keywords:
-            postings = self._index[word]
-            for posting in postings:
-                pid = posting.pointer
-                if pid in passage_vectors:
-                    vectorised_passage = passage_vectors[pid]
-                else:
-                    vectorised_passage = [0.0] * len(self._collection[pid])
-                passage_vectors[pid] = self._vectorise_passage(vectorised_passage, posting)
-        return passage_vectors
+            if word not in self._index:
+                continue
+            index = self._vocab.index(word)
+
+            # Query vectorisation
+            tf = query.count(word) / self._index[word].doc_freq
+            df = self._index[word].doc_freq
+            idf = log10(self._collection_length / df)
+            query_vectors[index] = tf * idf
+
+            # Passage vectorisation
+            for pid in self._index[word].postings.keys():
+                if pid not in passage_vectors:
+                    passage_vectors[pid] = [0.0] * self._vocab_count
+                tfidf = self._index[word].get_posting(pid).tfidf
+                passage_vectors[pid][index] = tfidf
+
+        return passage_vectors, query_vectors
 
     @staticmethod
-    def _vectorise_passage(vectorised_passage: list[float], posting: 'Posting') -> list[float]:
-        for position in posting.positions:
-            vectorised_passage[position] = posting.tfidf
-        return vectorised_passage
+    def _cos_sim(query_vectors: list[float], passage_vectors: list[float]) -> float:
+        dot_product = dot(query_vectors, passage_vectors)
+        norms = norm(query_vectors) * norm(passage_vectors)
+        return dot_product / norms
+        # return spatial.distance.cosine(query_vectors, passage_vectors)
+
+    @staticmethod
+    def cosine_similarity(v1, v2):
+        "compute cosine similarity of v1 to v2: (v1 dot v2)/{||v1||*||v2||)"
+        sumxx, sumxy, sumyy = 0, 0, 0
+        for i in range(len(v1)):
+            x = v1[i]
+            y = v2[i]
+            sumxx += x * x
+            sumyy += y * y
+            sumxy += x * y
+        return sumxy / math.sqrt(sumxx * sumyy)

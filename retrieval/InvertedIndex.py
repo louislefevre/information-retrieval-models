@@ -55,6 +55,14 @@ class InvertedIndex:
         word_sum = sum(len(passage) for passage in self._collection.values())
         return word_sum / self.collection_length
 
+    @property
+    def vocab(self) -> list[str]:
+        return list(self._index)
+
+    @property
+    def vocab_count(self) -> int:
+        return len(self._index)
+
 
 class InvertedList:
     def __init__(self):
