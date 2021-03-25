@@ -9,8 +9,12 @@ from retrieval.util.FileManager import write_pickle, read_pickle
 
 def display_results(query: str, results: dict[int, float], passages: dict[int, str]):
     print(query)
+    count = 0
     for pid, score in results.items():
+        if count >= 100:
+            break
         print(f"{pid}({round(score, 2)}): {passages[pid]}")
+        count += 1
     print()
 
 
@@ -29,12 +33,15 @@ def main():
     dataset = Dataset('dataset/candidate_passages_top1000.tsv')
     passages = dataset.passages()
     queries = dataset.queries()
+    mapping = dataset.id_mapping()
 
     index = generate_index('index.p', passages)
-    model = BM25(index)
+    model = VectorSpace(index)
 
     for qid, query in queries.items():
-        results = model.rank(query, top_n=100)
+        results = model.rank(query)
+        results = {pid: results[pid] for pid in results if pid in mapping[qid]}
+
         display_results(query, results, passages)
 
 
