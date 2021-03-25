@@ -44,7 +44,7 @@ class InvertedIndex:
 
     @property
     def index(self) -> dict[str, 'InvertedList']:
-        return self._index
+        return {key: value for key, value in sorted(self._index.items())}
 
     @property
     def collection_length(self) -> int:
