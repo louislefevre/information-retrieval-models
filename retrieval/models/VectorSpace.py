@@ -7,7 +7,6 @@ from numpy.linalg import norm
 
 from retrieval.InvertedIndex import InvertedIndex
 from retrieval.models.Model import Model
-from retrieval.util.TextProcessor import clean
 
 
 class VectorSpace(Model):
@@ -17,8 +16,7 @@ class VectorSpace(Model):
         self._vocab = sorted(index.vocab)
         self._vocab_count = index.vocab_count
 
-    def _parse_query(self, query: str) -> dict[int, float]:
-        query_words = [word for word in clean(query)]
+    def _parse_query(self, query_words: list[str]) -> dict[int, float]:
         passage_vectors = self._vectorise_passages(query_words)
         query_vectors = self._vectorise_query(query_words)
 
@@ -36,7 +34,10 @@ class VectorSpace(Model):
                 relevant_passages.add(pid)
 
         passage_vectors = {}
+        count = 0
         for term, inv_list in self._index.items():
+            count += 1
+            print(f"{count} / {len(self._index)}")
             index = self._vocab.index(term)
             for pid, posting in inv_list.postings.items():
                 if pid not in relevant_passages:
