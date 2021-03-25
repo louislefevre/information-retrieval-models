@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from retrieval.util.TextProcessor import clean_collection
-from math import log10
+from math import log
 
 
 class InvertedIndex:
@@ -28,7 +28,7 @@ class InvertedIndex:
             # Number of occurrences of the term in all passages.
             df = self._index[term].doc_freq
             # Log total passage count divided by df.
-            idf = log10(len(self._collection) / df)
+            idf = log(len(self._collection) / df)
             posting.tfidf = tf * idf
 
     def display(self):
