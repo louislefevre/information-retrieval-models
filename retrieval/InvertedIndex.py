@@ -67,14 +67,12 @@ class InvertedIndex:
 class InvertedList:
     def __init__(self):
         self._postings: dict[int, 'Posting'] = {}
-        self._doc_freq: int = 0
 
     def add_posting(self, pid: int, position: int):
         if self.contains_posting(pid):
             return self.update_posting(pid, position)
         posting = Posting(1, [position])
         self._postings[pid] = posting
-        self._doc_freq += 1
 
     def update_posting(self, pid: int, position: int):
         if not self.contains_posting(pid):
@@ -95,7 +93,7 @@ class InvertedList:
 
     @property
     def doc_freq(self) -> int:
-        return self._doc_freq
+        return len(self._postings)
 
 
 @dataclass
