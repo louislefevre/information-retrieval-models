@@ -19,7 +19,7 @@ class Model:
             if word not in self._index:
                 continue
             inv_list = self._index[word]
-            for pid, posting in inv_list.postings.items():
+            for pid in inv_list.postings.keys():
                 if pid in passage_scores:
                     passage_scores[pid] += self._score_passage(pid, word)
                 else:
