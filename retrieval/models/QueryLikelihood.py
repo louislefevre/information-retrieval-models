@@ -16,16 +16,9 @@ class QueryLikelihood(Model):
         self._word_count = len(self._all_words)
         self._counter = Counter(self._all_words)
 
-    def _parse_query(self, query_words: list[str]) -> dict[int, float]:
-        relevant_passages = set()
-        for word in query_words:
-            if word not in self._index:
-                continue
-            for pid in self._index[word].postings:
-                relevant_passages.add(pid)
-
+    def _score_query(self, query_words: list[str], passages: list[int]) -> dict[int, float]:
         language_models = {}
-        for pid in relevant_passages:
+        for pid in passages:
             probabilities = []
             for word in query_words:
                 probabilities.append(self._probability(pid, word, smoothing='dirichlet'))

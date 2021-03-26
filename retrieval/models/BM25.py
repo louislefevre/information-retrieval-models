@@ -10,17 +10,16 @@ class BM25(Model):
         self._collection_length = index.collection_length
         self._avg_length = index.avg_length
 
-    def _parse_query(self, query_words: list[str]) -> dict[int, float]:
+    def _score_query(self, query_tokens: list[str], passages: list[int]) -> dict[int, float]:
         passage_scores = {}
-        for word in query_words:
-            if word not in self._index:
-                continue
-            inv_list = self._index[word]
-            for pid in inv_list.postings.keys():
-                if pid in passage_scores:
-                    passage_scores[pid] += self._score_passage(pid, word)
-                else:
-                    passage_scores[pid] = self._score_passage(pid, word)
+        for pid in passages:
+            score = 0
+            for word in query_tokens:
+                if not self._index[word].contains_posting(pid):
+                    continue
+                score += self._score_passage(pid, word)
+            passage_scores[pid] = score
+
         return passage_scores
 
     def _score_passage(self, pid: int, word: str) -> float:
