@@ -1,6 +1,8 @@
 import os
 
 from retrieval.data.InvertedIndex import InvertedIndex
+from retrieval.models.BM25 import BM25
+from retrieval.models.QueryLikelihood import QueryLikelihood
 from retrieval.models.VectorSpace import VectorSpace
 from retrieval.data.Dataset import Dataset
 from retrieval.util.FileManager import write_pickle, read_pickle
@@ -35,12 +37,10 @@ def main():
     mapping = dataset.id_mapping()
 
     index = generate_index('index.p', passages)
-    model = VectorSpace(index)
+    model = BM25(index, mapping)
 
     for qid, query in queries.items():
-        results = model.rank(query)
-        results = {pid: results[pid] for pid in results if pid in mapping[qid]}
-
+        results = model.rank(qid, query)
         display_results(query, results, passages)
 
 

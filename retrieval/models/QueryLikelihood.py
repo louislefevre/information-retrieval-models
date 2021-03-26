@@ -7,8 +7,8 @@ from retrieval.models.Model import Model
 
 
 class QueryLikelihood(Model):
-    def __init__(self, index: 'InvertedIndex'):
-        super().__init__(index)
+    def __init__(self, index: 'InvertedIndex', mapping: dict[int, list[int]]):
+        super().__init__(index, mapping)
         self._vocab_count = index.vocab_count
         self._all_words = index.words
         self._word_count = index.word_count
