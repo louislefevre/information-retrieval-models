@@ -19,6 +19,3 @@ class Dataset:
 
     def passages(self) -> dict[int, str]:
         return {int(row[1]): row[3] for row in self._rows}
-
-    def relevant_passages(self, qid: int) -> dict[int, str]:
-        return {int(row[1]): row[3] for row in self._rows if int(row[0]) == qid}
