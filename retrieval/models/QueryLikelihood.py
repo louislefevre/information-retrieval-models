@@ -1,6 +1,4 @@
-import itertools
 import math
-from collections import Counter
 
 import numpy as np
 
@@ -12,9 +10,9 @@ class QueryLikelihood(Model):
     def __init__(self, index: 'InvertedIndex'):
         super().__init__(index)
         self._vocab_count = index.vocab_count
-        self._all_words = list(itertools.chain.from_iterable(self._collection.values()))
-        self._word_count = len(self._all_words)
-        self._counter = Counter(self._all_words)
+        self._all_words = index.words
+        self._word_count = index.word_count
+        self._counter = index.counter
 
     def _score_query(self, query_words: list[str], passages: list[int]) -> dict[int, float]:
         language_models = {}

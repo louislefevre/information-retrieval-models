@@ -12,7 +12,7 @@ class VectorSpace(Model):
     def __init__(self, index: 'InvertedIndex'):
         super().__init__(index)
         self._collection_length = index.collection_length
-        self._vocab = sorted(index.vocab)
+        self._vocab = index.vocab
         self._vocab_count = index.vocab_count
 
     def _score_query(self, query_tokens: list[str], passages: list[int]) -> dict[int, float]:
