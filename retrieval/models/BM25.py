@@ -13,7 +13,7 @@ class BM25(Model):
     def _score_passage(self, pid: int, query_words: list[str]) -> float:
         score = 0
         for word in query_words:
-            if not self._index[word].contains_posting(pid):
+            if word not in self._index or not self._index[word].contains_posting(pid):
                 continue
             score += self._score(pid, word)
         return score
