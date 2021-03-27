@@ -14,5 +14,5 @@ def write_pickle(data: object, file_name: str):
     pickle.dump(data, open(file_name, "wb"))
 
 
-def read_pickle(file_name: str) -> object:
+def read_pickle(file_name: str):
     return pickle.load(open(file_name, "rb"))
