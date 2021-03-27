@@ -40,4 +40,4 @@ class QueryLikelihood(Model):
             return (dl / (dl + 2000)) * (tf / dl) + (2000 / (dl + 2000)) * \
                    (self._counter[word] / self._word_count)
         else:
-            raise RuntimeError("Invalid smoothing.")
+            raise RuntimeError("Invalid smoothing - select 'laplace', 'lidstone', or 'dirichlet'.")
