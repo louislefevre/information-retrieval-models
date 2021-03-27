@@ -1,6 +1,5 @@
 import os
 
-from retrieval.TextStatistics import plotter
 from retrieval.data.Dataset import Dataset
 from retrieval.data.InvertedIndex import InvertedIndex
 from retrieval.models.BM25 import BM25
@@ -16,12 +15,12 @@ class DatasetParser:
         self._queries = self._dataset.queries()
         self._mapping = self._dataset.id_mapping()
 
-    def parse(self, model: str, plot: bool = False, smoothing: str = None,
+    def parse(self, model: str, plot_freq: bool = False, smoothing: str = None,
               index_path: str = 'index.p') -> dict[int, dict[int, float]]:
         index = self._generate_index(index_path, self._passages)
 
-        if plot:
-            self._plot_frequency(index)
+        if plot_freq:
+            index.plot()
 
         if model == 'bm25':
             model = BM25(index, self._mapping)
@@ -33,10 +32,6 @@ class DatasetParser:
             raise ValueError("Invalid retrieval model - select 'bm25', 'vector', or 'query'.")
 
         return {qid: model.rank(qid, query) for qid, query in self._queries.items()}
-
-    @staticmethod
-    def _plot_frequency(index: InvertedIndex):
-        plotter(index.counter)
 
     @staticmethod
     def _generate_index(file: str, passages: dict[int, str]) -> InvertedIndex:

@@ -3,7 +3,7 @@ from collections import Counter
 from matplotlib import pyplot as plt
 
 
-def plot(counter: Counter):
+def plot_frequency(counter: Counter):
     frequencies = _normalise(counter.values())
     frequencies.sort(reverse=True)
     frequencies = frequencies[:100]

@@ -3,6 +3,7 @@ from collections import Counter
 from dataclasses import dataclass
 from math import log
 
+from retrieval.util.Plotter import plot_frequency
 from retrieval.util.TextProcessor import clean_collection
 
 
@@ -14,6 +15,9 @@ class InvertedIndex:
     def parse(self):
         self._index_passages()
         self._tfidf_passages()
+
+    def plot(self):
+        plot_frequency(self.counter)
 
     def _index_passages(self):
         for pid, passage in self._collection.items():
