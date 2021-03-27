@@ -1,5 +1,5 @@
 import csv
-from typing import Union
+from typing import Union, Any
 import pickle
 
 
@@ -14,5 +14,5 @@ def write_pickle(data: object, file_name: str):
     pickle.dump(data, open(file_name, "wb"))
 
 
-def read_pickle(file_name: str):
+def read_pickle(file_name: str) -> Any:
     return pickle.load(open(file_name, "rb"))
