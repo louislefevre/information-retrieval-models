@@ -23,12 +23,12 @@ class DatasetParser:
             index.plot()
         if model == 'bm25':
             model = BM25(index, self._mapping)
-        elif model == 'vector':
+        elif model == 'vs':
             model = VectorSpace(index, self._mapping)
-        elif model == 'query':
+        elif model == 'lm':
             model = QueryLikelihood(index, self._mapping, smoothing)
         else:
-            raise ValueError("Invalid retrieval model - select 'bm25', 'vector', or 'query'.")
+            raise ValueError("Invalid retrieval model - select 'bm25', 'vs', or 'lm'.")
 
         print("Ranking queries against passages...")
         return {qid: model.rank(qid, query) for qid, query in self._queries.items()}

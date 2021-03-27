@@ -19,10 +19,8 @@ def main():
     parser = DatasetParser(dataset)
     results = parser.parse(model, plot_freq=plot, smoothing=smoothing)
 
-    models = {'bm25': 'BM25', 'vector': 'VS', 'query': 'LM'}
-    smoothers = {'laplace': '-Laplace', 'lidstone': '-Lidstone', 'dirichlet': '-Dirichlet'}
-    model = models[model]
-    smoothing = smoothers[smoothing] if smoothing is not None else ""
+    model = model.upper()
+    smoothing = f'-{smoothing.capitalize()}' if smoothing is not None else ""
 
     data = ''
     for qid, passages in results.items():
