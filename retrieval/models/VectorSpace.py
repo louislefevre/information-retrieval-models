@@ -29,6 +29,8 @@ class VectorSpace(Model):
         counter = Counter(query_words)
         query_length = sum(counter.values())
         for word in query_words:
+            if word not in self._index:
+                continue
             tfidf = tf_idf(counter[word], query_length, self._index[word].doc_freq,
                            self._collection_length)
             if word in vocab:

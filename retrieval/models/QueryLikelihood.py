@@ -19,7 +19,10 @@ class QueryLikelihood(Model):
         probabilities = []
         for word in query_words:
             probabilities.append(self._probability(pid, word))
-        return math.log(np.prod(probabilities))
+        try:
+            return math.log(np.prod(probabilities))
+        except ValueError:
+            return 0.0
 
     def _probability(self, pid: int, word: str) -> float:
         tf = self._index[word].get_posting(pid).freq if word in self._collection[pid] else 0

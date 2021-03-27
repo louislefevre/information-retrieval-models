@@ -30,8 +30,10 @@ def main():
     data = ''
     for qid, passages in results.items():
         for rank, (pid, score) in enumerate(passages.items()):
-            data += f"{qid}\t{'A1'}\t{pid}\t{rank}\t{format(score, '.2f')}\t{model}{smoothing}\n"
-    write_txt(f'results/{model}.txt', data)
+            if rank >= 100:
+                break
+            data += f"{qid}\t{'A1'}\t{pid}\t{rank+1}\t{format(score, '.2f')}\t{model}{smoothing}\n"
+    write_txt(f'results/{model}{smoothing}.txt', data)
 
 
 if __name__ == '__main__':
