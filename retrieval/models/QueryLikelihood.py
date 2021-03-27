@@ -7,7 +7,7 @@ from retrieval.models.Model import Model
 
 
 class QueryLikelihood(Model):
-    def __init__(self, index: InvertedIndex, mapping: dict[int, list[int]], smoothing: str = None):
+    def __init__(self, index: InvertedIndex, mapping: dict[int, list[int]], smoothing: str):
         super().__init__(index, mapping)
         self._all_words = index.words
         self._word_count = index.word_count
@@ -26,9 +26,7 @@ class QueryLikelihood(Model):
         dl = len(self._collection[pid])
         v = self._vocab_count
 
-        if self._smoothing is None:
-            return tf / dl
-        elif self._smoothing == 'laplace':
+        if self._smoothing == 'laplace':
             return (tf + 1) / (dl + v)
         elif self._smoothing == 'lidstone':
             return (tf + 0.5) / (dl + (0.5 * v))

@@ -27,7 +27,7 @@ class DatasetParser:
         elif model == 'vector':
             model = VectorSpace(index, self._mapping)
         elif model == 'query':
-            model = QueryLikelihood(index, self._mapping, smoothing=smoothing)
+            model = QueryLikelihood(index, self._mapping, smoothing)
         else:
             raise ValueError("Invalid retrieval model - select 'bm25', 'vector', or 'query'.")
 
