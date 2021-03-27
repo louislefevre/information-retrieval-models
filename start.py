@@ -1,26 +1,19 @@
+import argparse
+
 from retrieval.QueryParser import QueryParser
-from retrieval.util.CommandLine import parse_args
 
 
 def main():
-    args = parse_args()
+    parser = argparse.ArgumentParser(description='Information retrieval models.')
+    parser.add_argument('dataset', help='dataset for retrieving passages and queries')
+    parser.add_argument('model', help='model for ranking passages against queries')
+    parser.add_argument('-s', '--smoothing', help='smoothing for the Query Likelihood model')
+
+    args = parser.parse_args()
+    model = args.model
+    smoothing = args.smoothing
+
     parser = QueryParser(args.dataset)
-    model = None
-    smoothing = None
-
-    if args.bm25:
-        model = 'bm25'
-    elif args.vector_space:
-        model = 'vector'
-    elif args.query_likelihood:
-        model = 'query'
-        if args.laplace:
-            smoothing = 'laplace'
-        elif args.lidstone:
-            smoothing = 'lidstone'
-        elif args.dirichlet:
-            smoothing = 'dirichlet'
-
     results = parser.parse(model, smoothing=smoothing)
 
 
