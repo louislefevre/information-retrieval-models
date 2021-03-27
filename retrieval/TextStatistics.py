@@ -1,34 +1,25 @@
+from collections import Counter
+
 from matplotlib import pyplot as plt
-from nltk import FreqDist
-from sklearn.preprocessing import normalize
-
-from retrieval.util.FileManager import process_passage_collection
-from retrieval.util.TextProcessor import clean
 
 
-def plot():
-    collection = process_passage_collection()
-    passages = [clean(passage, remove_sw=False) for passage in collection.values()]
-    tokens = [token for tokens in passages for token in tokens]
-    _plot_frequencies(tokens)
+def plot(counter: Counter):
+    frequencies = _normalise(counter.values())
+    frequencies.sort(reverse=True)
+    frequencies = frequencies[:100]
+
+    _generate_figure(frequencies, title="Term Frequency", x_label="Rank",
+                     y_label="Probability", file_name='term-frequencies.png')
 
 
-def _plot_frequencies(tokens):
-    dist = FreqDist(tokens)
-    common = dist.most_common(100)
-    frequencies = [tup[1] for tup in common]
-    frequencies = normalize([frequencies])[0]
-    frequencies = [prob * 0.1 for prob in frequencies]
-    _generate_figure(frequencies, title="Term Frequency", x_label="Rank", y_label="Probability",
-                     save=True)
-
-
-def _generate_figure(data, title=None, x_label=None, y_label=None, save=False, show=False):
+def _generate_figure(data, title=None, x_label=None, y_label=None, file_name='figure.png'):
     plt.plot(data)
     plt.title(title)
     plt.xlabel(x_label)
     plt.ylabel(y_label)
-    if save:
-        plt.savefig("term-frequencies.png")
-    if show:
-        plt.show()
+    plt.savefig(file_name)
+
+
+def _normalise(data: iter) -> list[float]:
+    min_, max_ = min(data), max(data)
+    return [(i - min_) / (max_ - min_) for i in data]

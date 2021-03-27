@@ -12,12 +12,11 @@ def clean_collection(collection: dict[int, str]) -> dict[int, list[str]]:
     return {pid: clean(passage) for pid, passage in collection.items()}
 
 
-def clean(text: str, remove_sw=True) -> list[str]:
+def clean(text: str) -> list[str]:
     tokens = _tokenize(text)
     tokens = _convert_numbers(tokens)
     tokens = _normalise(tokens)
-    if remove_sw:
-        tokens = _remove_stopwords(tokens)
+    tokens = _remove_stopwords(tokens)
     tokens = _stem(tokens)
     return tokens
 
