@@ -15,7 +15,6 @@ class Model:
         scores = {}
         for idx, pid in enumerate(passages):
             scores[pid] = self._score_passage(pid, query_words)
-            print(f"{idx}/{len(passages)} passages parsed for query {qid}      ", end='\r')
 
         ranks = sorted(scores.items(), key=lambda item: item[1], reverse=True)
         return {pid: score for pid, score in ranks}

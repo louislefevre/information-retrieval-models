@@ -21,7 +21,6 @@ class DatasetParser:
 
         if plot_freq:
             index.plot()
-
         if model == 'bm25':
             model = BM25(index, self._mapping)
         elif model == 'vector':
@@ -31,12 +30,15 @@ class DatasetParser:
         else:
             raise ValueError("Invalid retrieval model - select 'bm25', 'vector', or 'query'.")
 
+        print("Ranking queries against passages...")
         return {qid: model.rank(qid, query) for qid, query in self._queries.items()}
 
     @staticmethod
     def _generate_index(file: str, passages: dict[int, str]) -> InvertedIndex:
         if os.path.isfile(file) and not os.stat(file).st_size == 0:
+            print(f"Generating index from '{file}'...")
             return read_pickle(file)
+        print(f"Generating index...")
         inverted_index = InvertedIndex(passages)
         inverted_index.parse()
         write_pickle(inverted_index, file)
