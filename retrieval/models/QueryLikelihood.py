@@ -15,15 +15,11 @@ class QueryLikelihood(Model):
         self._counter = index.counter
         self._smoothing = smoothing
 
-    def _score_query(self, query_words: list[str], passages: list[int]) -> dict[int, float]:
-        passage_scores = {}
-        for pid in passages:
-            probabilities = []
-            for word in query_words:
-                probabilities.append(self._probability(pid, word))
-            passage_scores[pid] = math.log(np.prod(probabilities))
-
-        return passage_scores
+    def _score_passage(self, pid: int, query_words: list[str]) -> float:
+        probabilities = []
+        for word in query_words:
+            probabilities.append(self._probability(pid, word))
+        return math.log(np.prod(probabilities))
 
     def _probability(self, pid: int, word: str) -> float:
         tf = self._index[word].get_posting(pid).freq if word in self._collection[pid] else 0

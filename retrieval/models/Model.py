@@ -11,9 +11,14 @@ class Model:
     def rank(self, qid: int, query: str) -> dict[int, float]:
         query_words = self._clean_query(query)
         passages = self._relevant_passages(qid, query_words)
-        scores = self._score_query(query_words, passages)
-        scores = sorted(scores.items(), key=lambda item: item[1], reverse=True)
-        return {key: value for key, value in scores}
+
+        scores = {}
+        for idx, pid in enumerate(passages):
+            scores[pid] = self._score_passage(pid, query_words)
+            print(f"{idx}/{len(passages)} passages parsed for query {qid}      ", end='\r')
+
+        ranks = sorted(scores.items(), key=lambda item: item[1], reverse=True)
+        return {pid: score for pid, score in ranks}
 
     def _clean_query(self, query: str) -> list[str]:
         return [word for word in clean(query)]
@@ -22,5 +27,5 @@ class Model:
         return list(set(pid for word in query_words if word in self._index
                         for pid in self._index[word].postings if pid in self._mapping[qid]))
 
-    def _score_query(self, query_words: list[str], passages: list[int]) -> dict[int, float]:
+    def _score_passage(self, pid: int, query_words: list[str]) -> float:
         raise NotImplementedError

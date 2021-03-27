@@ -14,8 +14,8 @@ class VectorSpace(Model):
         self._collection_length = index.collection_length
         self._vocab_count = index.vocab_count
 
-    def _score_query(self, query_words: list[str], passages: list[int]) -> dict[int, float]:
-        return {pid: self._similarity(pid, query_words) for pid in passages}
+    def _score_passage(self, pid: int, query_words: list[str]) -> float:
+        return self._similarity(pid, query_words)
 
     def _similarity(self, pid: int, query_words: list[str]) -> float:
         vocab = list(set(self._collection[pid]))
