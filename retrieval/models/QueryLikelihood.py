@@ -9,20 +9,20 @@ from retrieval.models.Model import Model
 class QueryLikelihood(Model):
     def __init__(self, index: 'InvertedIndex', mapping: dict[int, list[int]]):
         super().__init__(index, mapping)
-        self._vocab_count = index.vocab_count
         self._all_words = index.words
         self._word_count = index.word_count
+        self._vocab_count = index.vocab_count
         self._counter = index.counter
 
     def _score_query(self, query_words: list[str], passages: list[int]) -> dict[int, float]:
-        language_models = {}
+        passage_scores = {}
         for pid in passages:
             probabilities = []
             for word in query_words:
                 probabilities.append(self._probability(pid, word, smoothing='dirichlet'))
-            language_models[pid] = math.log(np.prod(probabilities))
+            passage_scores[pid] = math.log(np.prod(probabilities))
 
-        return language_models
+        return passage_scores
 
     def _probability(self, pid: int, word: str, smoothing=None) -> float:
         tf = self._index[word].get_posting(pid).freq if word in self._collection[pid] else 0

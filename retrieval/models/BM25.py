@@ -17,12 +17,12 @@ class BM25(Model):
             for word in query_tokens:
                 if not self._index[word].contains_posting(pid):
                     continue
-                score += self._score_passage(pid, word)
+                score += self._score(pid, word)
             passage_scores[pid] = score
 
         return passage_scores
 
-    def _score_passage(self, pid: int, word: str) -> float:
+    def _score(self, pid: int, word: str) -> float:
         # Constants
         k1 = 1.2
         b = 0.75
