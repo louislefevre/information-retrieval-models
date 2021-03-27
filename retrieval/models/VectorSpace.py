@@ -1,11 +1,10 @@
 from collections import Counter
-from math import log
 
 import numpy as np
-import numpy.linalg as npl
 
 from retrieval.data.InvertedIndex import InvertedIndex
 from retrieval.models.Model import Model
+from retrieval.util.Math import tf_idf, cos_sim
 
 
 class VectorSpace(Model):
@@ -28,8 +27,10 @@ class VectorSpace(Model):
 
         query_vector = np.zeros(vocab_count)
         counter = Counter(query_words)
+        query_length = sum(counter.values())
         for word in query_words:
-            tfidf = self._tfidf(counter, word)
+            tfidf = tf_idf(counter[word], query_length, self._index[word].doc_freq,
+                           self._collection_length)
             if word in vocab:
                 idx = vocab.index(word)
                 query_vector[idx] = tfidf
@@ -37,16 +38,4 @@ class VectorSpace(Model):
                 query_vector = np.append(query_vector, tfidf)
                 passage_vector = np.append(passage_vector, 0)
 
-        return self._cos_sim(query_vector, passage_vector)
-
-    def _tfidf(self, counter: Counter, word: str) -> float:
-        tf = counter[word] / sum(counter.values())
-        df = self._index[word].doc_freq
-        idf = log(self._collection_length / df)
-        return tf * idf
-
-    @staticmethod
-    def _cos_sim(query_vectors: np.ndarray, passage_vectors: np.ndarray) -> float:
-        dot_product = np.dot(query_vectors, passage_vectors)
-        norms = npl.norm(query_vectors) * npl.norm(passage_vectors)
-        return dot_product / norms
+        return cos_sim(query_vector, passage_vector)
