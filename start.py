@@ -16,17 +16,21 @@ def main():
     model = args.model
     smoothing = args.smoothing
     plot = args.plot
+
+    if model == 'lm' and smoothing is None:
+        raise ValueError("Smoothing must be supplied when using the Query Likelihood model.")
+    if not model == 'lm' and smoothing is not None:
+        raise ValueError("Smoothing can only be applied to the Query Likelihood model.")
+
     parser = DatasetParser(dataset)
     results = parser.parse(model, plot_freq=plot, smoothing=smoothing)
 
     model = model.upper()
     smoothing = f'-{smoothing.capitalize()}' if smoothing is not None else ""
-
     data = ''
     for qid, passages in results.items():
         for rank, (pid, score) in enumerate(passages.items()):
             data += f"{qid}\t{'A1'}\t{pid}\t{rank}\t{format(score, '.2f')}\t{model}{smoothing}\n"
-
     write_txt(f'results/{model}.txt', data)
 
 
