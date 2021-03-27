@@ -27,3 +27,15 @@ The program can be initialised by running *start.py*, which accepts parameters i
 - The `-p` parameter is optional and generates a PNG file which displays term frequencies in graph 
   format.
 - By default, this file will be saved to the local directory as *term-frequencies.png*.
+
+### Examples
+#### BM25 Model
+`start.py dataset/candidate_passages_top1000.tsv bm25`  
+
+#### Vector Space Model
+`start.py dataset/candidate_passages_top1000.tsv vs`  
+
+#### Query Likehood Model
+`start.py dataset/candidate_passages_top1000.tsv lm -s laplace`  
+`start.py dataset/candidate_passages_top1000.tsv lm -s lidstone`  
+`start.py dataset/candidate_passages_top1000.tsv lm -s dirichlet`  
