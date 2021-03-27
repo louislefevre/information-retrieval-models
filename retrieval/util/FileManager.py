@@ -1,4 +1,5 @@
 import csv
+import os
 from typing import Union, Any
 import pickle
 
@@ -8,6 +9,15 @@ def read_tsv(file_name: str) -> Union[list, str]:
     if file_name.endswith('.tsv'):
         return list(csv.reader(file, delimiter="\t"))
     raise RuntimeError("Invalid file type: only '.tsv' files are accepted.")
+
+
+def write_txt(file_name: str, data: str, mode='w'):
+    directory = os.path.dirname(file_name)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    file = open(file_name, mode=mode)
+    file.write(data)
+    file.close()
 
 
 def write_pickle(data: object, file_name: str):
