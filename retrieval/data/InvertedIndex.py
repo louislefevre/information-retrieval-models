@@ -17,10 +17,10 @@ class InvertedIndex:
 
     def _index_passages(self):
         for pid, passage in self._collection.items():
-            for pos, term in enumerate(passage):
+            for term in passage:
                 if term not in self._index:
                     self._index[term] = InvertedList()
-                self._index[term].add_posting(pid, pos)
+                self._index[term].add_posting(pid)
 
     def _tfidf_passages(self):
         for term, inv_index in self._index.items():
@@ -74,18 +74,17 @@ class InvertedList:
     def __init__(self):
         self._postings: dict[int, 'Posting'] = dict()
 
-    def add_posting(self, pid: int, position: int):
+    def add_posting(self, pid: int):
         if self.contains_posting(pid):
-            return self.update_posting(pid, position)
-        posting = Posting(1, [position])
+            return self.update_posting(pid)
+        posting = Posting()
         self._postings[pid] = posting
 
-    def update_posting(self, pid: int, position: int):
+    def update_posting(self, pid: int):
         if not self.contains_posting(pid):
-            return self.add_posting(pid, position)
+            return self.add_posting(pid)
         posting = self._postings[pid]
         posting.freq += 1
-        posting.positions += [position]
 
     def get_posting(self, pid: int) -> 'Posting':
         return self._postings[pid]
@@ -104,6 +103,5 @@ class InvertedList:
 
 @dataclass
 class Posting:
-    freq: int
-    positions: list[int]
+    freq: int = 1
     tfidf: float = 0.0
