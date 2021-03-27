@@ -9,9 +9,9 @@ class Model:
         self._mapping = mapping
 
     def rank(self, qid: int, query: str) -> dict[int, float]:
-        query_tokens = self._clean_query(query)
-        passages = self._relevant_passages(qid, query_tokens)
-        scores = self._score_query(query_tokens, passages)
+        query_words = self._clean_query(query)
+        passages = self._relevant_passages(qid, query_words)
+        scores = self._score_query(query_words, passages)
         scores = sorted(scores.items(), key=lambda item: item[1], reverse=True)
         return {key: value for key, value in scores}
 
@@ -22,5 +22,5 @@ class Model:
         return list(set(pid for word in query_words if word in self._index
                         for pid in self._index[word].postings if pid in self._mapping[qid]))
 
-    def _score_query(self, query_tokens: list[str], passages: list[int]) -> dict[int, float]:
+    def _score_query(self, query_words: list[str], passages: list[int]) -> dict[int, float]:
         raise NotImplementedError

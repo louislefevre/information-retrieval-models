@@ -16,8 +16,8 @@ class InvertedIndex:
         self._tfidf_passages()
 
     def _index_passages(self):
-        for pid, terms in self._collection.items():
-            for pos, term in enumerate(terms):
+        for pid, passage in self._collection.items():
+            for pos, term in enumerate(passage):
                 if term not in self._index:
                     self._index[term] = InvertedList()
                 self._index[term].add_posting(pid, pos)
