@@ -4,7 +4,6 @@ Ranks passages against queries using various models and techniques.
 ## How to Run
 The program can be initialised by running *start.py*, which accepts parameters in the format of:
 `start.py <dataset> <model> [-s <smoothing>] [-p]`
-
 ### Parameters
 #### Dataset
 - The `<dataset>` parameter is required and is the path of the dataset to be parsed.
@@ -30,12 +29,16 @@ The program can be initialised by running *start.py*, which accepts parameters i
 
 ### Examples
 #### BM25 Model
-`start.py dataset/candidate_passages_top1000.tsv bm25`  
-
+`start.py dataset/candidate_passages_top1000.tsv bm25`
 #### Vector Space Model
-`start.py dataset/candidate_passages_top1000.tsv vs`  
-
+`start.py dataset/candidate_passages_top1000.tsv vs`
 #### Query Likehood Model
 `start.py dataset/candidate_passages_top1000.tsv lm -s laplace`  
 `start.py dataset/candidate_passages_top1000.tsv lm -s lidstone`  
 `start.py dataset/candidate_passages_top1000.tsv lm -s dirichlet`  
+
+## Dependencies
+- [numpy](https://pypi.org/project/numpy/)
+- [matplotlib](https://pypi.org/project/matplotlib/)
+- [nltk](https://pypi.org/project/nltk/)
+- [num2words](https://pypi.org/project/num2words/)
