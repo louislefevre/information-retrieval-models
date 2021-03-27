@@ -8,7 +8,7 @@ from retrieval.models.VectorSpace import VectorSpace
 from retrieval.util.FileManager import read_pickle, write_pickle
 
 
-class QueryParser:
+class DatasetParser:
     def __init__(self, dataset_path: str):
         self._dataset = Dataset(dataset_path)
         self._passages = self._dataset.passages()

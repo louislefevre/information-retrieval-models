@@ -1,6 +1,6 @@
 import argparse
 
-from retrieval.QueryParser import QueryParser
+from retrieval.DatasetParser import DatasetParser
 
 
 def main():
@@ -13,7 +13,7 @@ def main():
     model = args.model
     smoothing = args.smoothing
 
-    parser = QueryParser(args.dataset)
+    parser = DatasetParser(args.dataset)
     results = parser.parse(model, smoothing=smoothing)
 
 
