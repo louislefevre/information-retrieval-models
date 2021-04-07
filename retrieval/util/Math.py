@@ -9,8 +9,7 @@ def normalise(data: iter) -> list[float]:
     return [(i - min_) / (max_ - min_) for i in data]
 
 
-def tf_idf(tf: int, dl: int, df: int, n: int) -> float:
-    tf = tf / dl
+def tf_idf(tf: int, df: int, n: int) -> float:
     idf = log(n / df)
     return tf * idf
 

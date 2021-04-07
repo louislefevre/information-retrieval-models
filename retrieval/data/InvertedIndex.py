@@ -29,8 +29,7 @@ class InvertedIndex:
     def _tfidf_passages(self):
         for term, inv_index in self._index.items():
             for pointer, posting in inv_index.postings.items():
-                posting.tfidf = tf_idf(posting.freq, len(self._collection[pointer]),
-                                       self._index[term].doc_freq, len(self._collection))
+                posting.tfidf = tf_idf(posting.freq, self._index[term].doc_freq, len(self._collection))
 
     @property
     def index(self) -> dict[str, 'InvertedList']:
