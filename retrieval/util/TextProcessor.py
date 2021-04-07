@@ -1,11 +1,10 @@
-# import nltk
-# nltk.download('punkt')
-# nltk.download('stopwords')
-
+import nltk
 from nltk import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 from num2words import num2words
+nltk.download('punkt')
+nltk.download('stopwords')
 
 
 def clean_collection(collection: dict[int, str]) -> dict[int, list[str]]:
