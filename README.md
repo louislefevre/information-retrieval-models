@@ -42,3 +42,6 @@ The program can be initialised by running *start.py*, which accepts parameters i
 - [matplotlib](https://pypi.org/project/matplotlib/)
 - [nltk](https://pypi.org/project/nltk/)
 - [num2words](https://pypi.org/project/num2words/)
+- [punkt (nltk module)](http://www.nltk.org/api/nltk.tokenize.html?highlight=punkt)
+- [stopwords (nltk module)](https://www.nltk.org/api/nltk.corpus.html)  
+*NLTK modules are downloaded automatically at runtime*

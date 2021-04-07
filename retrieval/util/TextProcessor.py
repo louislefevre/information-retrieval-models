@@ -3,8 +3,8 @@ from nltk import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 from num2words import num2words
-nltk.download('punkt')
-nltk.download('stopwords')
+nltk.download('punkt', quiet=True)
+nltk.download('stopwords', quiet=True)
 
 
 def clean_collection(collection: dict[int, str]) -> dict[int, list[str]]:
