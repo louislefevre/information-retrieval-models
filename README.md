@@ -1,6 +1,28 @@
 # Information Retrieval Models
 Ranks passages against queries using various models and techniques.
 
+## Structure
+The following describes the purpose of each package and the contained modules.
+### Retrieval
+- data/ - Data structures for storing and managing data.
+- models/ - Information retrieval models for ranking passages against queries.
+- util/ - Helper functions used for processing and managing data.
+- DatasetParser.py - The primary module which takes a dataset as input and parses it using a specified model.
+### Data
+- Dataset.py - Extracts and retrieves data from the dataset.
+- InvertedIndex.py - Indexes passages from the dataset.
+### Models
+- Model.py - Base class which all IR models inherit.
+- BM25.py - BM25 probabilistic retrieval model for estimating the relevance of a passage.
+- VectorSpace.py - Vector space algebraic model for representing passages as vectors.
+- QueryLikelihood.py - Query likelihood language model for calculating the likelihood of a document being relevant to a 
+given query.
+### Util
+- FileManager.py - Reads and writes to a given file.
+- TextProcessor.py - Performs text preprocessing on a collection or passage.
+- Plotter.py - Plots the term frequency graph.
+- Math.py - Various mathematical formula functions.
+
 ## How to Run
 The program can be initialised by running *start.py*, which accepts parameters in the format of:
 `start.py <dataset> <model> [-s <smoothing>] [-p]`
