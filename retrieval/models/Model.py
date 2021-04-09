@@ -13,7 +13,7 @@ class Model:
         passages = self._relevant_passages(qid, query_words)
 
         scores = {}
-        for idx, pid in enumerate(passages):
+        for pid in passages:
             scores[pid] = self._score_passage(pid, query_words)
 
         ranks = sorted(scores.items(), key=lambda item: item[1], reverse=True)
