@@ -20,7 +20,7 @@ given query.
 ### Util
 - FileManager.py - Reads and writes to a given file.
 - TextProcessor.py - Performs text preprocessing on a collection or passage.
-- Plotter.py - Plots the term frequency graph.
+- Plotter.py - Generates a term distribution plot, as well as a parameter report for the collection.
 - Math.py - Various mathematical formula functions.
 
 ## How to Run
@@ -64,6 +64,7 @@ The program can be initialised by running *start.py*, which accepts parameters i
 - [matplotlib](https://pypi.org/project/matplotlib/)
 - [nltk](https://pypi.org/project/nltk/)
 - [num2words](https://pypi.org/project/num2words/)
+- [tabulate](https://pypi.org/project/tabulate/)
 - [punkt (nltk module)](http://www.nltk.org/api/nltk.tokenize.html?highlight=punkt)
 - [stopwords (nltk module)](https://www.nltk.org/api/nltk.corpus.html)  
 *NLTK modules are downloaded automatically at runtime*
