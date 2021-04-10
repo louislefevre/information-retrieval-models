@@ -10,6 +10,7 @@ dataset/
 results/
 *.p
 *.png
+*.txt
 
 # User-specific stuff
 .idea/
