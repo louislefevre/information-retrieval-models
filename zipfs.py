@@ -1,12 +1,16 @@
+import argparse
+import itertools
 from collections import Counter
 
 from matplotlib import pyplot as plt
 from tabulate import tabulate
 
+from data.Dataset import Dataset
 from util.FileManager import write_txt
+from util.TextProcessor import clean_collection
 
 
-def zipfs(counter: Counter):
+def _zipfs_distribution(counter: Counter):
     prob_distribution = []
     rows = []
     total_count = sum(counter.values())
@@ -24,9 +28,9 @@ def zipfs(counter: Counter):
     _report_parameters(rows, c)
 
 
-def _plot_distribution(prob_distribution: list[float]):
-    zipf_distribution = [0.1 / i for i in range(1, 101)]
-    _generate_figure(prob_distribution, zipf_distribution, title="Zipf's Law", x_label="Rank",
+def _plot_distribution(prob_dist: list[float]):
+    zipf_dist = [0.1 / i for i in range(1, 101)]
+    _generate_figure(prob_dist, zipf_dist, title="Zipf's Law", x_label="Rank",
                      y_label="Probability", file_name='zipf-plot.png')
 
 
@@ -45,3 +49,24 @@ def _generate_figure(*data, title=None, x_label=None, y_label=None, file_name='f
     plt.ylabel(y_label)
     plt.grid()
     plt.savefig(file_name)
+
+
+def main():
+    parser = argparse.ArgumentParser(description='Zipfs law distribution plot and report.')
+    parser.add_argument('dataset', help='dataset for retrieving passages')
+    args = parser.parse_args()
+
+    print('Processing dataset...')
+    dataset = Dataset(args.dataset)
+    collection = clean_collection(dataset.passages(), remove_sw=False)
+
+    print('Analysing data...')
+    words = list(itertools.chain.from_iterable(collection.values()))
+    counter = Counter(words)
+
+    print('Generating plot...')
+    _zipfs_distribution(counter)
+
+
+if __name__ == '__main__':
+    main()

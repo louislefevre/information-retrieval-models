@@ -1,5 +1,4 @@
 import os
-from collections import Counter
 
 from retrieval.data.Dataset import Dataset
 from retrieval.data.InvertedIndex import InvertedIndex
@@ -7,7 +6,6 @@ from retrieval.models.BM25 import BM25
 from retrieval.models.QueryLikelihood import QueryLikelihood
 from retrieval.models.VectorSpace import VectorSpace
 from retrieval.util.FileManager import read_pickle, write_pickle
-from util.Plotter import zipfs
 
 
 class DatasetParser:
@@ -17,12 +15,9 @@ class DatasetParser:
         self._queries = self._dataset.queries()
         self._mapping = self._dataset.id_mapping()
 
-    def parse(self, model: str, plot_freq: bool = False, smoothing: str = None,
-              index_path: str = 'index.p') -> dict[int, dict[int, float]]:
+    def parse(self, model: str, smoothing: str = None, index_path: str = 'index.p') -> dict[int, dict[int, float]]:
         index = self._generate_index(index_path, self._passages)
 
-        if plot_freq:
-            self._zipfs_law(index.counter)
         if model == 'bm25':
             model = BM25(index, self._mapping)
         elif model == 'vs':
@@ -34,10 +29,6 @@ class DatasetParser:
 
         print("Ranking queries against passages...")
         return {qid: model.rank(qid, query) for qid, query in self._queries.items()}
-
-    @staticmethod
-    def _zipfs_law(counter: Counter):
-        zipfs(counter)
 
     @staticmethod
     def _generate_index(file: str, passages: dict[int, str]) -> InvertedIndex:

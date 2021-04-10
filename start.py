@@ -8,14 +8,12 @@ def main():
     parser = argparse.ArgumentParser(description='Information retrieval models.')
     parser.add_argument('dataset', help='dataset for retrieving passages and queries')
     parser.add_argument('model', help='model for ranking passages against queries')
-    parser.add_argument('-p', '--plot', action='store_true', help='generate term frequency graph')
     parser.add_argument('-s', '--smoothing', help='smoothing for the Query Likelihood model')
 
     args = parser.parse_args()
     dataset = args.dataset
     model = args.model
     smoothing = args.smoothing
-    plot = args.plot
 
     if model == 'lm' and smoothing is None:
         raise ValueError("Smoothing must be supplied when using the Query Likelihood model.")
@@ -23,7 +21,7 @@ def main():
         raise ValueError("Smoothing can only be applied to the Query Likelihood model.")
 
     parser = DatasetParser(dataset)
-    results = parser.parse(model, plot_freq=plot, smoothing=smoothing)
+    results = parser.parse(model, smoothing=smoothing)
 
     model = model.upper()
     smoothing = f'-{smoothing.capitalize()}' if smoothing is not None else ""

@@ -7,15 +7,16 @@ nltk.download('punkt', quiet=True)
 nltk.download('stopwords', quiet=True)
 
 
-def clean_collection(collection: dict[int, str]) -> dict[int, list[str]]:
-    return {pid: clean(passage) for pid, passage in collection.items()}
+def clean_collection(collection: dict[int, str], remove_sw: bool = True) -> dict[int, list[str]]:
+    return {pid: clean(passage, remove_sw=remove_sw) for pid, passage in collection.items()}
 
 
-def clean(text: str) -> list[str]:
+def clean(text: str, remove_sw: bool = True) -> list[str]:
     tokens = _tokenize(text)
     tokens = _convert_numbers(tokens)
     tokens = _normalise(tokens)
-    tokens = _remove_stopwords(tokens)
+    if remove_sw:
+        tokens = _remove_stopwords(tokens)
     tokens = _stem(tokens)
     return tokens
 
