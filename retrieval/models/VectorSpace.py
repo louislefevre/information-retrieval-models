@@ -1,10 +1,11 @@
 from collections import Counter
+from math import log
 
 import numpy as np
+import numpy.linalg as npl
 
 from retrieval.data.InvertedIndex import InvertedIndex
 from retrieval.models.Model import Model
-from retrieval.util.Math import tf_idf, cos_sim
 
 
 class VectorSpace(Model):
@@ -32,7 +33,8 @@ class VectorSpace(Model):
             if word not in self._index:
                 continue
             tf = (0.5 + (0.5 * (counter[word] / max_freq)))
-            tfidf = tf_idf(tf, self._index[word].doc_freq, self._collection_length)
+            idf = log(self._collection_length / self._index[word].doc_freq)
+            tfidf = tf * idf
             if word in vocab:
                 idx = vocab.index(word)
                 query_vector[idx] = tfidf
@@ -40,4 +42,10 @@ class VectorSpace(Model):
                 query_vector = np.append(query_vector, tfidf)
                 passage_vector = np.append(passage_vector, 0)
 
-        return cos_sim(query_vector, passage_vector)
+        return self._cos_sim(query_vector, passage_vector)
+
+    @staticmethod
+    def _cos_sim(vector_1: np.ndarray, vector_2: np.ndarray) -> float:
+        dot_product = np.dot(vector_1, vector_2)
+        norms = npl.norm(vector_1) * npl.norm(vector_2)
+        return dot_product / norms

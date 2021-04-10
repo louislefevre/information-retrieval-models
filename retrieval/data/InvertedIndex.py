@@ -1,8 +1,8 @@
 import itertools
 from collections import Counter
 from dataclasses import dataclass
+from math import log
 
-from retrieval.util.Math import tf_idf
 from retrieval.util.TextProcessor import clean_collection
 
 
@@ -25,7 +25,9 @@ class InvertedIndex:
     def _tfidf_passages(self):
         for term, inv_index in self._index.items():
             for pointer, posting in inv_index.postings.items():
-                posting.tfidf = tf_idf(posting.freq, self._index[term].doc_freq, len(self._collection))
+                tf = posting.freq
+                idf = log(self.collection_length / self._index[term].doc_freq)
+                posting.tfidf = tf * idf
 
     @property
     def index(self) -> dict[str, 'InvertedList']:
