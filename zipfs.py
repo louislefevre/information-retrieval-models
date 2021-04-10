@@ -60,7 +60,7 @@ def main():
     args = parser.parse_args()
 
     print("This script is only for generating a distribution plot and parameter report for Zipfs law."
-          "To run the IR models program, execute 'start.py'.")
+          "\nTo run the IR models program, execute 'start.py'.")
 
     print("Processing dataset - this will take a few minutes...")
     dataset = Dataset(args.dataset)
