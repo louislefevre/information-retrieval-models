@@ -5,7 +5,7 @@ Ranks passages against queries using various models and techniques.
 The following describes the purpose of each package and the contained modules.
 ### Root
 - start.py - Initialises the program, taking parameters from the user for the dataset and choice of model.
-- zipf.py - Generates a distribution plot and reports Zipfs law parameters for the dataset. Note that this runs
+- zipfs.py - Generates a distribution plot and reports Zipfs law parameters for the dataset. Note that this runs
 separately from the main program.
 ### Retrieval
 - data/ - Data structures for storing and managing data.
@@ -26,8 +26,11 @@ given query.
 - TextProcessor.py - Performs text preprocessing on a collection or passage.
 
 ## How to Run
-The program can be initialised by running *start.py*, which accepts parameters in the format of:
-`start.py <dataset> <model> [-s <smoothing>] [-p]`
+The program can be initialised by running *start.py*, which accepts parameters in the format of:  
+`start.py <dataset> <model> [-s <smoothing>]`  
+To generate a distribution plot and report parameters for Zipfs law, run *zipfs.py*, which accepts a parameter in the
+form of:  
+`zipfs.py <dataset>`  
 ### Parameters
 #### Dataset
 - The `<dataset>` parameter is required and is the path of the dataset to be parsed.
@@ -46,20 +49,18 @@ The program can be initialised by running *start.py*, which accepts parameters i
   for Dirichlet smoothing.
 - This parameter can only ever be used if the Query Likelihood model was selected for the `<model>` 
   parameter, and an exception will be raised if any other model is used.
-#### Frequency Plot
-- The `-p` parameter is optional and generates a PNG file which displays term frequencies in graph 
-  format.
-- By default, this file will be saved to the local directory as *term-frequencies.png*.
 
 ### Examples
 #### BM25 Model
-`start.py dataset/candidate_passages_top1000.tsv bm25`
+`start.py candidate_passages_top1000.tsv bm25`
 #### Vector Space Model
-`start.py dataset/candidate_passages_top1000.tsv vs`
+`start.py candidate_passages_top1000.tsv vs`
 #### Query Likehood Model
-`start.py dataset/candidate_passages_top1000.tsv lm -s laplace`  
-`start.py dataset/candidate_passages_top1000.tsv lm -s lidstone`  
-`start.py dataset/candidate_passages_top1000.tsv lm -s dirichlet`  
+`start.py candidate_passages_top1000.tsv lm -s laplace`  
+`start.py candidate_passages_top1000.tsv lm -s lidstone`  
+`start.py candidate_passages_top1000.tsv lm -s dirichlet`  
+#### Zipfs Law Report
+`zipfs.py candidate_passages_top1000.tsv`
 
 ## Dependencies
 - [numpy](https://pypi.org/project/numpy/)
