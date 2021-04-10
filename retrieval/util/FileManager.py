@@ -13,7 +13,7 @@ def read_tsv(file_name: str) -> Union[list, str]:
 
 def write_txt(file_name: str, data: str, mode='w'):
     directory = os.path.dirname(file_name)
-    if not os.path.exists(directory):
+    if directory and os.path.exists(directory):
         os.makedirs(directory)
     file = open(file_name, mode=mode)
     file.write(data)
