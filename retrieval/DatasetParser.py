@@ -35,7 +35,7 @@ class DatasetParser:
         if os.path.isfile(file) and not os.stat(file).st_size == 0:
             print(f"Generating index from '{file}'...")
             return read_pickle(file)
-        print(f"Generating index...")
+        print(f"Generating index - this will take a few minutes...")
         inverted_index = InvertedIndex(passages)
         inverted_index.parse()
         write_pickle(inverted_index, file)
