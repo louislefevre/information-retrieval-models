@@ -1,14 +1,14 @@
-from retrieval.data.InvertedIndex import InvertedIndex
+from inverted_index import InvertedIndex
 from retrieval.util.TextProcessor import clean
 
 
 class Model:
-    def __init__(self, index: 'InvertedIndex', mapping: dict[int, list[int]]):
-        self._collection = index.collection
+    def __init__(self, index: 'InvertedIndex', mapping: dict[str, list[str]]):
+        self._documents = index.documents
         self._index = index.index
         self._mapping = mapping
 
-    def rank(self, qid: int, query: str) -> dict[int, float]:
+    def rank(self, qid: str, query: str) -> dict[str, float]:
         query_words = self._clean_query(query)
         passages = self._relevant_passages(qid, query_words)
 
@@ -22,9 +22,9 @@ class Model:
     def _clean_query(self, query: str) -> list[str]:
         return [word for word in clean(query)]
 
-    def _relevant_passages(self, qid: int, query_words: list[str]) -> list[int]:
+    def _relevant_passages(self, qid: str, query_words: list[str]) -> list[str]:
         return list(set(pid for word in query_words if word in self._index
                         for pid in self._index[word].postings if pid in self._mapping[qid]))
 
-    def _score_passage(self, pid: int, query_words: list[str]) -> float:
+    def _score_passage(self, pid: str, query_words: list[str]) -> float:
         raise NotImplementedError

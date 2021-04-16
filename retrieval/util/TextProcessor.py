@@ -7,7 +7,7 @@ nltk.download('punkt', quiet=True)
 nltk.download('stopwords', quiet=True)
 
 
-def clean_collection(collection: dict[int, str], remove_sw: bool = True) -> dict[int, list[str]]:
+def clean_collection(collection: dict[str, str], remove_sw: bool = True) -> dict[str, list[str]]:
     return {pid: clean(passage, remove_sw=remove_sw) for pid, passage in collection.items()}
 
 
