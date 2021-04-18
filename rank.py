@@ -1,8 +1,8 @@
 import argparse
 
+from data.Dataset import Dataset
 from retrieval.DatasetParser import DatasetParser
 from retrieval.util.FileManager import write_txt
-from util.Metrics import mean_average_precision
 
 
 def main():
@@ -23,9 +23,10 @@ def main():
     if not model == 'lm' and smoothing is not None:
         raise ValueError("Smoothing can only be applied to the Query Likelihood model.")
 
+    dataset = Dataset(dataset)
     parser = DatasetParser(dataset)
-    results = parser.parse(model, smoothing=smoothing)
 
+    results = parser.parse(model, smoothing=smoothing)
     if limit:
         results = {qid: {r: ranks[r] for r in list(ranks)[:limit]} for qid, ranks in results.items()}
 

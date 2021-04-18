@@ -9,38 +9,24 @@ from retrieval.util.FileManager import read_pickle, write_pickle
 
 
 class DatasetParser:
-    def __init__(self, dataset_path: str):
-        self._dataset = self._generate_dataset('dataset.p', dataset_path)
-        self._passages = self._dataset.passages()
-        self._queries = self._dataset.queries()
-        self._mapping = self._dataset.id_mapping()
-        self._relevant = self._dataset.relevant_mapping()
+    def __init__(self, dataset: 'Dataset'):
+        self._dataset = dataset
 
     def parse(self, model: str, smoothing: str = None) -> dict[int, dict[int, float]]:
-        index = self._generate_index('index.p', self._passages)
+        index = self._generate_index('index.p', self._dataset.passages())
+        mapping = self._dataset.id_mapping()
 
         if model == 'bm25':
-            model = BM25(index, self._mapping)
+            model = BM25(index, mapping)
         elif model == 'vs':
-            model = VectorSpace(index, self._mapping)
+            model = VectorSpace(index, mapping)
         elif model == 'lm':
-            model = QueryLikelihood(index, self._mapping, smoothing)
+            model = QueryLikelihood(index, mapping, smoothing)
         else:
             raise ValueError("Invalid retrieval model - select 'bm25', 'vs', or 'lm'.")
 
         print("Ranking queries against passages...")
-        return {qid: model.rank(qid, query) for qid, query in self._queries.items()}
-
-    @staticmethod
-    def _generate_dataset(file_name: str, dataset_name: str):
-        if os.path.isfile(file_name) and not os.stat(file_name).st_size == 0:
-            print(f"Generating dataset from '{file_name}'...")
-            return read_pickle(file_name)
-        print(f"Generating dataset - this will take a few minutes...")
-        dataset = Dataset(dataset_name)
-        dataset.parse()
-        write_pickle(dataset, file_name)
-        return dataset
+        return {qid: model.rank(qid, query) for qid, query in self._dataset.queries().items()}
 
     @staticmethod
     def _generate_index(file_name: str, passages: dict[int, str]) -> InvertedIndex:

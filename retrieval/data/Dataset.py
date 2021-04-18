@@ -5,21 +5,7 @@ from retrieval.util.FileManager import read_tsv
 
 class Dataset:
     def __init__(self, file_name: str):
-        self._file_name = file_name
-        self._queries: dict[int, 'Query'] = {}
-
-    def parse(self):
-        rows = read_tsv(self._file_name)[1:]
-        queries = {}
-        for row in rows:
-            qid, query_text = int(row[0]), row[2]
-            pid, passage_text, relevancy = int(row[1]), row[3], float(row[4])
-            if qid not in queries:
-                queries[qid] = Query(qid, query_text)
-            query = queries[qid]
-            query.add_passage(pid, passage_text, relevancy)
-
-        self._queries = queries
+        self._queries = self._parse(file_name)
 
     def id_mapping(self) -> dict[int, list[int]]:
         return {query.qid: [pid for pid in query.passages] for query in self._queries.values()}
@@ -32,6 +18,20 @@ class Dataset:
 
     def passages(self) -> dict[int, str]:
         return {pid: text for query in self._queries.values() for pid, text in query.passages.items()}
+
+    @staticmethod
+    def _parse(file_name: str) -> dict[int, 'Query']:
+        rows = read_tsv(file_name)[1:]
+        queries = {}
+        for row in rows:
+            qid, query_text = int(row[0]), row[2]
+            pid, passage_text, relevancy = int(row[1]), row[3], float(row[4])
+            if qid not in queries:
+                queries[qid] = Query(qid, query_text)
+            query = queries[qid]
+            query.add_passage(pid, passage_text, relevancy)
+
+        return queries
 
 
 @dataclass
