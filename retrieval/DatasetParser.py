@@ -14,6 +14,7 @@ class DatasetParser:
         self._passages = self._dataset.passages()
         self._queries = self._dataset.queries()
         self._mapping = self._dataset.id_mapping()
+        self._relevant = self._dataset.relevant_mapping()
 
     def parse(self, model: str, smoothing: str = None) -> dict[int, dict[int, float]]:
         index = self._generate_index('index.p', self._passages)
