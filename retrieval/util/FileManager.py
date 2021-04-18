@@ -20,6 +20,11 @@ def write_txt(file_name: str, data: str, mode='w'):
     file.close()
 
 
+def read_txt(file_name: str) -> list[str]:
+    file = open(file_name, "r")
+    return file.readlines()
+
+
 def write_pickle(data: object, file_name: str):
     pickle.dump(data, open(file_name, "wb"))
 
