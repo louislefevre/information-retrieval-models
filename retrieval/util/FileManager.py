@@ -1,10 +1,10 @@
 import csv
 import os
-from typing import Union, Any
+from typing import Any
 import pickle
 
 
-def read_tsv(file_name: str) -> Union[list, str]:
+def read_tsv(file_name: str) -> list[list[str]]:
     file = open(file_name)
     if file_name.endswith('.tsv'):
         return list(csv.reader(file, delimiter="\t"))
