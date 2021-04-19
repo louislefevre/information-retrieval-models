@@ -2,7 +2,7 @@ import argparse
 
 from data.Dataset import Dataset
 from util.FileManager import read_txt
-from util.Metrics import mean_average_precision
+from util.Metrics import mean_average_precision, mean_ndcg
 
 
 def main():
@@ -23,6 +23,7 @@ def main():
         results[qid][pid] = score
 
     print(mean_average_precision(results, dataset.relevant_mapping()))
+    print(mean_ndcg(results, dataset.relevant_mapping()))
 
 
 if __name__ == '__main__':
