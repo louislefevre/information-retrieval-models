@@ -1,6 +1,7 @@
 import argparse
 
 from data.Dataset import Dataset
+from training.Embedding import embed
 from util.FileManager import read_txt
 from util.Metrics import mean_average_precision, mean_ndcg
 
@@ -22,8 +23,11 @@ def main():
             results[qid] = {}
         results[qid][pid] = score
 
-    print(mean_average_precision(results, dataset.relevant_mapping()))
-    print(mean_ndcg(results, dataset.relevant_mapping()))
+    ap = mean_average_precision(results, dataset.relevant_mapping())
+    ndcg = mean_ndcg(results, dataset.relevant_mapping())
+
+    embedded_queries = embed(dataset.queries())
+    embedded_passages = embed(dataset.passages())
 
 
 if __name__ == '__main__':
