@@ -8,6 +8,7 @@
 # Data
 dataset/
 results/
+Sandbox.py
 *.p
 *.png
 *.txt
