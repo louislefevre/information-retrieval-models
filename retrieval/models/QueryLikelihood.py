@@ -1,5 +1,4 @@
 import math
-
 import numpy as np
 
 from inverted_index import InvertedIndex
@@ -10,8 +9,8 @@ class QueryLikelihood(Model):
     def __init__(self, index: InvertedIndex, mapping: dict[str, list[str]], smoothing: str):
         super().__init__(index, mapping)
         self._all_words = index.words
-        self._word_count = len(self._all_words)
-        self._vocab_count = len(index.vocab)
+        self._word_count = index.word_count
+        self._vocab_count = index.vocab_count
         self._counter = index.word_counter
         self._smoothing = smoothing
 
@@ -25,8 +24,8 @@ class QueryLikelihood(Model):
             return 0.0
 
     def _probability(self, pid: str, word: str) -> float:
-        tf = self._index[word].get_posting(pid).freq if word in self._documents[pid] else 0
-        dl = len(self._documents[pid])
+        tf = self._index.frequency(word, pid) if self._index.contains_word(pid, word) else 0
+        dl = self._index.document_length(pid)
         v = self._vocab_count
 
         if self._smoothing == 'laplace':

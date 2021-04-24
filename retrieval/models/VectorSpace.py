@@ -1,8 +1,8 @@
 from collections import Counter
-from math import log
 
 import numpy as np
 import numpy.linalg as npl
+from math import log
 
 from inverted_index import InvertedIndex
 from retrieval.models.Model import Model
@@ -12,19 +12,19 @@ class VectorSpace(Model):
     def __init__(self, index: 'InvertedIndex', mapping: dict[str, list[str]]):
         super().__init__(index, mapping)
         self._vocab = index.vocab
-        self._document_count = len(index.documents)
-        self._vocab_count = len(index.vocab)
+        self._document_count = index.document_count
+        self._vocab_count = index.vocab_count
 
     def _score_passage(self, pid: str, query_words: list[str]) -> float:
         return self._similarity(pid, query_words)
 
     def _similarity(self, pid: str, query_words: list[str]) -> float:
-        vocab = list(set(self._documents[pid]))
+        vocab = self._index.document_vocab(pid)
         vocab_count = len(vocab)
 
         passage_vector = np.zeros(vocab_count)
         for idx, word in enumerate(vocab):
-            passage_vector[idx] = self._index[word].get_posting(pid).tfidf
+            passage_vector[idx] = self._index.tfidf(word, pid)
 
         query_vector = np.zeros(vocab_count)
         counter = Counter(query_words)
@@ -33,7 +33,7 @@ class VectorSpace(Model):
             if word not in self._index:
                 continue
             tf = (0.5 + (0.5 * (counter[word] / max_freq)))
-            idf = log(self._document_count / self._index[word].doc_freq)
+            idf = log(self._document_count / self._index.document_frequency(word))
             tfidf = tf * idf
             if word in vocab:
                 idx = vocab.index(word)
