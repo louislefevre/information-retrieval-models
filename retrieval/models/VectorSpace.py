@@ -11,20 +11,20 @@ from retrieval.models.Model import Model
 class VectorSpace(Model):
     def __init__(self, index: 'InvertedIndex', mapping: dict[str, list[str]]):
         super().__init__(index, mapping)
-        self._vocab = index.vocab
-        self._document_count = index.document_count
-        self._vocab_count = index.vocab_count
+        self._vocab = index.vocab()
+        self._document_count = index.document_count()
+        self._vocab_count = index.vocab_count()
 
     def _score_passage(self, pid: str, query_words: list[str]) -> float:
         return self._similarity(pid, query_words)
 
     def _similarity(self, pid: str, query_words: list[str]) -> float:
-        vocab = self._index.document_vocab(pid)
+        vocab = self._index.vocab(doc_name=pid)
         vocab_count = len(vocab)
 
         passage_vector = np.zeros(vocab_count)
         for idx, word in enumerate(vocab):
-            passage_vector[idx] = self._index.tfidf(word, pid)
+            passage_vector[idx] = self._index.get(word).tfidf(pid)
 
         query_vector = np.zeros(vocab_count)
         counter = Counter(query_words)
@@ -32,8 +32,9 @@ class VectorSpace(Model):
         for word in query_words:
             if word not in self._index:
                 continue
+            inv_list = self._index.get(word)
             tf = (0.5 + (0.5 * (counter[word] / max_freq)))
-            idf = log(self._document_count / self._index.document_frequency(word))
+            idf = log(self._document_count / inv_list.posting_count())
             tfidf = tf * idf
             if word in vocab:
                 idx = vocab.index(word)

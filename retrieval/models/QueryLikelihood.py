@@ -8,10 +8,10 @@ from retrieval.models.Model import Model
 class QueryLikelihood(Model):
     def __init__(self, index: InvertedIndex, mapping: dict[str, list[str]], smoothing: str):
         super().__init__(index, mapping)
-        self._all_words = index.words
-        self._word_count = index.word_count
-        self._vocab_count = index.vocab_count
-        self._counter = index.word_counter
+        self._all_words = index.words()
+        self._word_count = index.word_count()
+        self._vocab_count = index.vocab_count()
+        self._counter = index.word_counter()
         self._smoothing = smoothing
 
     def _score_passage(self, pid: str, query_words: list[str]) -> float:
@@ -24,8 +24,8 @@ class QueryLikelihood(Model):
             return 0.0
 
     def _probability(self, pid: str, word: str) -> float:
-        tf = self._index.frequency(word, pid) if self._index.contains_word(pid, word) else 0
-        dl = self._index.document_length(pid)
+        tf = self._index.get(word).frequency(pid) if word in self._index.documents[pid] else 0
+        dl = self._index.word_count(doc_name=pid)
         v = self._vocab_count
 
         if self._smoothing == 'laplace':

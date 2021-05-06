@@ -6,7 +6,7 @@ from retrieval.models.BM25 import BM25
 from retrieval.models.QueryLikelihood import QueryLikelihood
 from retrieval.models.VectorSpace import VectorSpace
 from retrieval.util.FileManager import read_pickle, write_pickle
-from util.TextProcessor import clean
+from retrieval.util.TextProcessor import clean
 
 
 class DatasetParser:
@@ -40,7 +40,7 @@ class DatasetParser:
         index = InvertedIndex()
         for doc_name, content in passages.items():
             tokens = clean(content)
-            index.add_document(str(doc_name), tokens)
+            index.add(str(doc_name), tokens)
 
         write_pickle(index, file)
         return index

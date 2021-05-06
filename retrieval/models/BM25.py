@@ -7,13 +7,13 @@ from retrieval.models.Model import Model
 class BM25(Model):
     def __init__(self, index: 'InvertedIndex', mapping: dict[str, list[str]]):
         super().__init__(index, mapping)
-        self._document_count = index.document_count
-        self._avg_length = index.avg_length
+        self._document_count = index.document_count()
+        self._avg_length = index.average_length()
 
     def _score_passage(self, pid: str, query_words: list[str]) -> float:
         score = 0
         for word in query_words:
-            if word not in self._index or not self._index.contains_posting(word, pid):
+            if word not in self._index or pid not in self._index.get(word):
                 continue
             score += self._score(pid, word)
         return score
@@ -24,10 +24,11 @@ class BM25(Model):
         b = 0.75
 
         # Parameters
+        inv_list = self._index.get(word)
         N = self._document_count
-        n = self._index.document_frequency(word)
-        f = self._index.frequency(word, pid)
-        dl = float(self._index.document_length(pid))
+        n = inv_list.posting_count()
+        f = inv_list.frequency(pid)
+        dl = float(self._index.word_count(doc_name=pid))
         avg_dl = float(self._avg_length)
 
         # Formulas

@@ -24,7 +24,7 @@ class Model:
 
     def _relevant_passages(self, qid: str, query_words: list[str]) -> list[str]:
         return list(set(pid for word in query_words if word in self._index
-                        for pid in self._index.postings(word) if pid in self._mapping[qid]))
+                        for pid in self._index.get(word).postings if pid in self._mapping[qid]))
 
     def _score_passage(self, pid: str, query_words: list[str]) -> float:
         raise NotImplementedError
