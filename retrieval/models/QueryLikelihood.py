@@ -25,7 +25,7 @@ class QueryLikelihood(Model):
 
     def _probability(self, pid: str, word: str) -> float:
         tf = self._index.get(word).frequency(pid) if word in self._index.documents[pid] else 0
-        dl = self._index.word_count(doc_name=pid)
+        dl = self._index.word_count(doc_id=pid)
         v = self._vocab_count
 
         if self._smoothing == 'laplace':

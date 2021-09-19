@@ -19,7 +19,7 @@ class VectorSpace(Model):
         return self._similarity(pid, query_words)
 
     def _similarity(self, pid: str, query_words: list[str]) -> float:
-        vocab = self._index.vocab(doc_name=pid)
+        vocab = self._index.vocab(doc_id=pid)
         vocab_count = len(vocab)
 
         passage_vector = np.zeros(vocab_count)

@@ -28,7 +28,7 @@ class BM25(Model):
         N = self._document_count
         n = inv_list.posting_count()
         f = inv_list.frequency(pid)
-        dl = float(self._index.word_count(doc_name=pid))
+        dl = float(self._index.word_count(doc_id=pid))
         avg_dl = float(self._avg_length)
 
         # Formulas
