@@ -2,7 +2,6 @@ import itertools
 from collections import Counter
 from dataclasses import dataclass
 from math import log
-
 from retrieval.util.textprocessor import clean_collection
 
 

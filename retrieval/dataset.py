@@ -1,9 +1,8 @@
 import os
-
-from retrieval.util.invertedindex import InvertedIndex
-from retrieval.models.bm25 import BM25
-from retrieval.models.querylikelihood import QueryLikelihood
-from retrieval.models.vectorspace import VectorSpace
+from retrieval.invertedindex import InvertedIndex
+from retrieval.models import BM25
+from retrieval.models import QueryLikelihood
+from retrieval.models import VectorSpace
 from retrieval.util.filemanager import read_pickle, write_pickle, read_tsv
 
 
