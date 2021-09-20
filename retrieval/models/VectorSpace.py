@@ -24,7 +24,7 @@ class VectorSpace(Model):
 
         passage_vector = np.zeros(vocab_count)
         for idx, word in enumerate(vocab):
-            passage_vector[idx] = self._index.get(word).tfidf(pid)
+            passage_vector[idx] = self._tfidf(word, pid)
 
         query_vector = np.zeros(vocab_count)
         counter = Counter(query_words)
@@ -34,7 +34,7 @@ class VectorSpace(Model):
                 continue
             inv_list = self._index.get(word)
             tf = (0.5 + (0.5 * (counter[word] / max_freq)))
-            idf = log(self._document_count / inv_list.posting_count())
+            idf = log(self._document_count / inv_list.document_frequency)
             tfidf = tf * idf
             if word in vocab:
                 idx = vocab.index(word)
@@ -50,3 +50,8 @@ class VectorSpace(Model):
         dot_product = np.dot(vector_1, vector_2)
         norms = npl.norm(vector_1) * npl.norm(vector_2)
         return dot_product / norms
+
+    def _tfidf(self, word: str, pid: int):
+        tf = self._index.get(word).get(pid).frequency
+        idf = log(self._index.document_count / self._index.get(word).document_frequency)
+        return tf * idf
