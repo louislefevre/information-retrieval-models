@@ -4,7 +4,7 @@ from math import log
 import numpy as np
 import numpy.linalg as npl
 
-from retrieval.data.InvertedIndex import InvertedIndex
+from retrieval.util.InvertedIndex import InvertedIndex
 from retrieval.models.Model import Model
 
 

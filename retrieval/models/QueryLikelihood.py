@@ -2,7 +2,7 @@ import math
 
 import numpy as np
 
-from retrieval.data.InvertedIndex import InvertedIndex
+from retrieval.util.InvertedIndex import InvertedIndex
 from retrieval.models.Model import Model
 
 
