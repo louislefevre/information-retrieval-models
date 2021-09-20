@@ -2,8 +2,8 @@ import math
 
 import numpy as np
 
-from retrieval.util.InvertedIndex import InvertedIndex
-from retrieval.models.Model import Model
+from retrieval.util.invertedindex import InvertedIndex
+from retrieval.models.model import Model
 
 
 class QueryLikelihood(Model):

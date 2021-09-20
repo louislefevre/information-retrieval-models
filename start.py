@@ -1,7 +1,7 @@
 import argparse
 
-from retrieval.DatasetParser import DatasetParser
-from retrieval.util.FileManager import write_txt
+from retrieval.dataset import DatasetParser
+from retrieval.util.filemanager import write_txt
 
 
 def main():

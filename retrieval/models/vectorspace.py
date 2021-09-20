@@ -4,8 +4,8 @@ from math import log
 import numpy as np
 import numpy.linalg as npl
 
-from retrieval.util.InvertedIndex import InvertedIndex
-from retrieval.models.Model import Model
+from retrieval.util.invertedindex import InvertedIndex
+from retrieval.models.model import Model
 
 
 class VectorSpace(Model):

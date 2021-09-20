@@ -1,5 +1,5 @@
-from retrieval.util.InvertedIndex import InvertedIndex
-from retrieval.util.TextProcessor import clean
+from retrieval.util.invertedindex import InvertedIndex
+from retrieval.util.textprocessor import clean
 
 
 class Model:

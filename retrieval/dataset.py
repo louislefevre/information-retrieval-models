@@ -1,10 +1,10 @@
 import os
 
-from retrieval.util.InvertedIndex import InvertedIndex
-from retrieval.models.BM25 import BM25
-from retrieval.models.QueryLikelihood import QueryLikelihood
-from retrieval.models.VectorSpace import VectorSpace
-from retrieval.util.FileManager import read_pickle, write_pickle, read_tsv
+from retrieval.util.invertedindex import InvertedIndex
+from retrieval.models.bm25 import BM25
+from retrieval.models.querylikelihood import QueryLikelihood
+from retrieval.models.vectorspace import VectorSpace
+from retrieval.util.filemanager import read_pickle, write_pickle, read_tsv
 
 
 class Dataset:
